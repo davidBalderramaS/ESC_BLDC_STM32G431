@@ -16,16 +16,19 @@
 #define LED_PA10 (1 << 10)
 
 void LED_PA10_Init(void);
+void Delay_Brute(void);
 
 
 int main(void){
-
 	LED_PA10_Init();
-	COMP1_Init();
-	COMP2_Init();
+	//COMP1_Init();    // PA1+ | PA4-
+
+	//COMP2_Init_v2(); // PA7+ | PA5-
+	COMP3_Init_v2();   // PC1+ | PC0-
+
 
 	while (1){
-		if (COMP1->CSR & COMP_CSR_VALUE){
+		if (COMP3->CSR & COMP_CSR_VALUE){
 			// Set LED_PA10 HIGH
 			GPIOA->ODR |= LED_PA10;
 		}
@@ -33,9 +36,6 @@ int main(void){
 			// Set LED_PA10 LOW
 		    GPIOA->ODR &= ~LED_PA10;
 		}
-
-		// Brute force delay function
-		//for (volatile uint16_t count = 0; count < 65500; count++);
 	}
 }
 
@@ -50,17 +50,10 @@ void LED_PA10_Init(void){
 	GPIOA->MODER |= (0b01 << 20);
 }
 
-/*
- * What am I doing?
- *
- * Initializing COMPx_INP and COMPx_INM
- *
- * When COMPx_INP > COMPx_INM,
- * Then trigger the next commutational step
- *
- * In this case, set LED_PA10 to HIGH
- *
- */
+// Brute force delay function
+void Delay_Brute(void){
+	for (volatile uint16_t count = 0; count < 65500; count++);
+}
 
 
 
