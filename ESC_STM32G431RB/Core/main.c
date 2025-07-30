@@ -8,52 +8,40 @@
  */
 
 #include "stm32g4xx.h"
+#include "stm32g431xx.h"
 #include <stdio.h>
 #include <math.h>
 
 #include "Back_EMF/COMPx.h"
+#include "Utils/Utils.h"
+#include "Sensor_Handling/ADC.h"
+#include "Communication/USART_printf.h"
 
-#define LED_PA10 (1 << 10)
-
-void LED_PA10_Init(void);
-void Delay_Brute(void);
-
+/*
+ *
+ * ----->  Branch_COMPx_Init  <-----
+ *
+ */
 
 int main(void){
 	LED_PA10_Init();
-	//COMP1_Init();    // PA1+ | PA4-
 
-	//COMP2_Init_v2(); // PA7+ | PA5-
-	COMP3_Init_v2();   // PC1+ | PC0-
+	COMP1_Init();     // PA1+ | PA4-
+	COMP2_Init_v2();  // PA7+ | PA5-
+	COMP3_Init_v2();  // PC1+ | PC0-
 
+	USART2_PA2_Init();
+
+	ADC_Poten_PA7_Init();
 
 	while (1){
-		if (COMP3->CSR & COMP_CSR_VALUE){
-			// Set LED_PA10 HIGH
-			GPIOA->ODR |= LED_PA10;
-		}
-		else {
-			// Set LED_PA10 LOW
-		    GPIOA->ODR &= ~LED_PA10;
-		}
+		//printf("Testing USART1 \r\n");
+
+		printf("%u \r\n", ADC_Value_PA7);
+		Delay_Brute();
 	}
 }
 
-void LED_PA10_Init(void){
-	// init Clk to GPIOA
-	RCC->AHB2ENR |= (1<<0);
-
-	// Clear PA10
-	GPIOA->MODER &= ~(0b11 << 20);
-
-	// Set PA10 as output
-	GPIOA->MODER |= (0b01 << 20);
-}
-
-// Brute force delay function
-void Delay_Brute(void){
-	for (volatile uint16_t count = 0; count < 65500; count++);
-}
 
 
 

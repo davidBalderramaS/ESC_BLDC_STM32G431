@@ -19,3 +19,20 @@ void COMP2_Init_v2(void); // PA7+ | PA5-
 void COMP3_Init_v2(void); // PC1+ | PC0-
 
 #endif /* BACK_EMF_COMPX_H_ */
+
+
+/*
+ * NOTES
+ *
+ * while (1){
+		if (COMP3->CSR & COMP_CSR_VALUE){
+			// Set LED_PA10 HIGH
+			GPIOA->ODR |= LED_PA10;
+		}
+		else {
+			// Set LED_PA10 LOW
+		    GPIOA->ODR &= ~LED_PA10;
+		}
+	}
+ *
+ */
