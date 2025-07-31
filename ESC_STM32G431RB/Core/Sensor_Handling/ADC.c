@@ -17,6 +17,9 @@
 #include <stdio.h>
 #include <math.h>
 
+#define PWM_DutyCycle_Max   159
+#define ADC_Bits            4096
+
 volatile uint16_t ADC_Value_PA7 = 0;
 
 // Initializes GPIOA, Timer, and Interrupt peripherals for PA7
@@ -92,7 +95,28 @@ void ADC1_2_IRQHandler(void) {
     }
 }
 
+/*
+ *  This function adjusts values of the ADC input (potentiometer value)
+ *  in order to fit the PWM duty cycle range
+ *  ADC = 0-4095
+ *  PWM duty cycle = CCRx = 0-159 <-- For a 100k Hz PWM signal
+ */
+uint16_t ADC_Truncate(int ADC_Val_Poten){
+	// truncatedVal = (userInput/4059) * 159
+	double ADC_Val_Truncated = (((double)ADC_Val_Poten/(ADC_Bits - 1)) * PWM_DutyCycle_Max);
 
+	// round up to nearest whole number
+	return (uint16_t)round(ADC_Val_Truncated);
+}
+
+/*
+ *  This function calculates the duty cycle percentage
+ *  Input is truncated ADC value
+ */
+uint16_t Duty_Cycle_Percent(uint16_t dutyCycleRange){
+	double dutyCyclePercentage = (((double)dutyCycleRange / PWM_DutyCycle_Max) * 100);
+	return (uint16_t)round(dutyCyclePercentage);
+}
 
 
 

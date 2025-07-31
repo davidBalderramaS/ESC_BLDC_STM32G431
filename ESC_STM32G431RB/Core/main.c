@@ -17,6 +17,10 @@
 #include "Sensor_Handling/ADC.h"
 #include "Communication/USART_printf.h"
 
+/*
+ * -----> Branch_ADC_truncate <-----
+ *
+ */
 
 int main(void){
 	LED_PA10_Init();
@@ -31,7 +35,7 @@ int main(void){
 
 	while (1){
 
-		printf("%u \r\n", ADC_Value_PA7);
+		printf("%u%% \r\n", Duty_Cycle_Percent(ADC_Truncate(ADC_Value_PA7)));
 		Delay_Brute();
 
 	}
