@@ -87,8 +87,8 @@ void COMP3_Init_v2(void){
 	RCC->APB2ENR |= (1 << 0);
 
 	// Set PC1+ to Analog Mode
-	GPIOC->MODER &= ~(0b11 << 1);
-	GPIOC->MODER |= (0b11 << 1);
+	GPIOC->MODER &= ~(0b11 << 2); // <-THIS
+	GPIOC->MODER |= (0b11 << 2);
 	// Set PC0- to Analog Mode
 	GPIOC->MODER &= ~(0b11 << 0);
 	GPIOC->MODER |= (0b11 << 0);
@@ -109,7 +109,37 @@ void COMP3_Init_v2(void){
 	COMP3->CSR |= (1 << 0);
 }
 
+// COMP4_INP -> PB0+
+// COMP4_INM -> PB2-
+void COMP4_Init_v2(void){
+	// Enable GPIOB Clk
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
+	// Enable COMPx Clk access
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
+	// Set PB0+ to Analog Mode
+	GPIOB->MODER &= ~(0b11 << 0);
+	GPIOB->MODER |= (0b11 << 0);
+	// Set PB2- to Analog Mode
+	GPIOB->MODER &= ~(0b11 << 4);
+	GPIOB->MODER |= (0b11 << 4);
+
+	// Disable pull-up/pull-down
+	GPIOB->PUPDR &= ~(0b11 << 0);
+	GPIOB->PUPDR &= ~(0b11 << 4);
+
+	// Init COMP4
+	// Clear CSR
+	COMP4->CSR = 0;
+	// Set COMP4_INP input to PB0+
+	COMP4->CSR &= ~COMP_CSR_INPSEL;
+	// Set COMP4_INM input to PB2-
+	COMP4->CSR |= (0b111 << 4);
+
+	// Enable COMP4
+	COMP4->CSR |= (1 << 0);
+}
+/////////////////////////////////////////////////////////////////////////////
 // SOLDER BRIDGE  -> MODIFY TO USE on nucleo board :(
 // COMP2_INP -> PA3+
 // COMP2_INM -> PA2-
@@ -161,8 +191,8 @@ void COMP3_Init(void){
 	//GPIOA->PUPDR |= (0b00 << 0);
 
 	// Disable pull-up/pull-down
-	GPIOA->PUPDR &= ~(0b11 << 0);   // <-- CHANGE LAST BIT
-	GPIOF->PUPDR &= ~(0b11 << 0);
+	GPIOA->PUPDR &= ~(0b11 << 1);   // <-- CHANGE LAST BIT
+	GPIOF->PUPDR &= ~(0b11 << 1);
 
 	// Init COMP3
 	// Clear CSR

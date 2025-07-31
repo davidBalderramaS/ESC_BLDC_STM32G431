@@ -25,9 +25,9 @@
 int main(void){
 	LED_PA10_Init();
 
-	COMP1_Init();     // PA1+ | PA4-
-	COMP2_Init_v2();  // PA7+ | PA5-
-	COMP3_Init_v2();  // PC1+ | PC0-
+	//COMP1_Init();     // PA1+ | PA4-  -> PB
+	//COMP3_Init_v2();    // PC1+ | PC0-  -> PC
+	COMP4_Init_v2();  // PB0+ | PB2-  -> PA
 
 	USART2_PA2_Init();
 
@@ -35,8 +35,8 @@ int main(void){
 
 	while (1){
 
-		printf("%u%% \r\n", Duty_Cycle_Percent(ADC_Truncate(ADC_Value_PA7)));
-		Delay_Brute();
+		//printf("%u%% \r\n", Duty_Cycle_Percent(ADC_Truncate(ADC_Value_PA7)));
+		//Delay_Brute();
 
 	}
 }

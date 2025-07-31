@@ -12,11 +12,12 @@
 #define BACK_EMF_COMPX_H_
 
 void COMP1_Init(void);   // PA1+ | PA4-
-void COMP2_Init(void);   // PA3+ | PA2-
-void COMP3_Init(void);   // PA0+ | PF1-
+//void COMP2_Init(void);   // PA3+ | PA2- <-USART2
+//void COMP3_Init(void);   // PA0+ | PF1-
 
-void COMP2_Init_v2(void); // PA7+ | PA5-
+//void COMP2_Init_v2(void); // PA7+ | PA5-
 void COMP3_Init_v2(void); // PC1+ | PC0-
+void COMP4_Init_v2(void); // PB0+ | PB2-
 
 #endif /* BACK_EMF_COMPX_H_ */
 
