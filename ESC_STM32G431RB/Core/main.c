@@ -17,11 +17,6 @@
 #include "Sensor_Handling/ADC.h"
 #include "Communication/USART_printf.h"
 
-/*
- *
- * ----->  Branch_COMPx_Init  <-----
- *
- */
 
 int main(void){
 	LED_PA10_Init();
@@ -35,10 +30,10 @@ int main(void){
 	ADC_Poten_PA7_Init();
 
 	while (1){
-		//printf("Testing USART1 \r\n");
 
 		printf("%u \r\n", ADC_Value_PA7);
 		Delay_Brute();
+
 	}
 }
 

@@ -23,15 +23,14 @@ volatile uint16_t ADC_Value_PA7 = 0;
 void ADC_Poten_PA7_Init(void){
 	// Step 1: Init GPIOA
 	// Enable GPIOA Clk access
-	RCC->AHB2ENR |= (1<<0);
-
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
 	// Set PA7 to analog mode
 	GPIOA->MODER |= (0b11 << 14);
 
 
 	// Step 2: Init Timer (TIM3_CH2 -> AF2)
     // Enable TIM3 clock
-    RCC->APB1ENR1 |= (1 << 1);
+    RCC->APB1ENR1 |= RCC_APB1ENR1_TIM3EN;
 
     // Set prescaler and auto-reload for 10ms period (For 16 MHz Clk)
     TIM3->PSC = 16000 - 1;   // 16 MHz / 16000 = 1 kHz
@@ -44,33 +43,49 @@ void ADC_Poten_PA7_Init(void){
     TIM3->CR1 |= TIM_CR1_CEN;
 
 
-    // Step 3: Init Interrupt (ADC2_IN4)
-	// enable ADC2 Clk
-	RCC->AHB2ENR |= (1 << 13);
+    // Step 3: Init Interrupt (ADC2_IN4) -> IN4 = CH4
+	// enable ADC2 Clk and ADC Clk source
+	RCC->AHB2ENR |= RCC_AHB2ENR_ADC12EN;
+	RCC->CCIPR |= (0b10 << 28);
 
-    // Trigger from TIM2 TRGO
-    ADC2->CFGR |= (0b01100 << 5);  // TIM3_TRGO (RM0440: Table 76)
+	// ADC startup sequence
+	// Enable ADC voltage regulator (RM0440: 21.4.6)
+	ADC2->CR &= ~(ADC_CR_ADEN|ADC_CR_DEEPPWD);     // Disable ADC and DEEPPWD
+	ADC2->CR |= ADC_CR_ADVREGEN;                   // Enable voltage regulator
+	for (volatile uint32_t i = 0; i < 1000; i++);  // Wait ~20 µs for regulator
+
+	// Calibrate ADC
+	ADC2->CR |= ADC_CR_ADCAL;         // Start calibration
+	while (ADC2->CR & ADC_CR_ADCAL);  // Wait for calibration to complete
+
+	// Enable ADC
+	ADC2->CR |= ADC_CR_ADEN;
+	while (!(ADC2->ISR & ADC_ISR_ADRDY));  // Wait for ADC to be ready
+
+    // Trigger from TIM3 TRGO
+    ADC2->CFGR |= (0b00100 << 5);  // TIM3_TRGO = 4 (RM0440: Table 67. Interconnect 19)
     ADC2->CFGR |= (0b01 << 10);    // Trigger on rising edge
 
-	// Regular channel sequence
-	ADC2->SQR1 &= ~(0b1111 << 0);   // 1 conversion for CH0
-	ADC2->SQR1 &= ~(0b1111 << 6);   // Channel 0
+    // Convert CH4 first -> SQ1
+	ADC2->SQR1 |= (4 << 6);
 
-    // Set sample time for channel 0 -> 47.5 ADC Clk cycles
-    ADC2->SMPR1 |= (0b100 << 0);
+    // Set sample time for SMP4 (CH4) -> 47.5 ADC Clk cycles
+	ADC2->SMPR1 &= ~(0b111 << 12);
+	ADC2->SMPR1 |= (0b100 << 12);
 
-    // Enable end of conv interrupt EOCIN
-    ADC2->IER |= (1 << 2);
+    // Enable end of conv interrupt EOCIE
+    ADC2->IER |= ADC_IER_EOCIE;
 
     // Enable ADC interrupt in NVIC
+    NVIC_SetPriority(ADC1_2_IRQn, 1);  // Optional: Set priority
     NVIC_EnableIRQ(ADC1_2_IRQn);
 
-    // enable ADC
-    ADC2->CR |= (1 << 0);
+    // Start ADC conversion (triggered by TIM3_TRGO)
+    ADC2->CR |= ADC_CR_ADSTART;
 }
 
 // ADC Interrupt thingy
-void ADC_IRQHandler(void) {
+void ADC1_2_IRQHandler(void) {
     if (ADC2->ISR & ADC_ISR_EOC) {
     	// 12-bit result (0–4095)
     	ADC_Value_PA7 = ADC2->DR;
