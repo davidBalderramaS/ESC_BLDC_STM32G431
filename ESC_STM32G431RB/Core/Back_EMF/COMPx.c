@@ -139,6 +139,8 @@ void COMP4_Init_v2(void){
 	// Enable COMP4
 	COMP4->CSR |= (1 << 0);
 }
+
+
 /////////////////////////////////////////////////////////////////////////////
 // SOLDER BRIDGE  -> MODIFY TO USE on nucleo board :(
 // COMP2_INP -> PA3+

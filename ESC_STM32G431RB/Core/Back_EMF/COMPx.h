@@ -24,6 +24,7 @@ void COMP4_Init_v2(void); // PB0+ | PB2-
 
 /*
  * NOTES
+ * COMPx Test to see it config works
  *
  * while (1){
 		if (COMP3->CSR & COMP_CSR_VALUE){
