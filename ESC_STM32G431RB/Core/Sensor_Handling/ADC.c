@@ -115,6 +115,7 @@ uint16_t ADC_Truncate(int ADC_Val_Poten){
  */
 uint16_t Duty_Cycle_Percent(uint16_t dutyCycleRange){
 	double dutyCyclePercentage = (((double)dutyCycleRange / PWM_DutyCycle_Max) * 100);
+
 	return (uint16_t)round(dutyCyclePercentage);
 }
 

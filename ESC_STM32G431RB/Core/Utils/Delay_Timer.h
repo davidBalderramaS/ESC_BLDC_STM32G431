@@ -10,7 +10,7 @@
 
 #include "stm32g431xx.h"
 
-void Delay_TIM3_Init(void);
+void Delay_TIM17_Init(void);
 void Delay_uS(uint16_t time_uS);
 void Delay_mS(uint16_t time_mS);
 

@@ -19,19 +19,12 @@
 #include "Utils/Delay_Timer.h"
 #include "Utils/Utils.h"
 
-/*
- *
- * ------> Branch_OpenLoop_Config <------
- *
- */
-
-volatile uint16_t temp = 0;
 
 int main(void){
 	LED_PA10_Init();
 	USART2_PA2_Init();
 	ADC_Poten_PA7_Init(); // <- TIMER3
-	Delay_TIM3_Init();
+	Delay_TIM17_Init();
 
 	//COMP1_Init();     // PA1+ | PA4-  -> PB
 	//COMP3_Init_v2();  // PC1+ | PC0-  -> PC
@@ -44,16 +37,16 @@ int main(void){
 	PWM_PA15_TIM2_CH1_Init(); // M3H
 	PWM_PB7_TIM4_CH2_Init();  // M3L
 
-	//Delay_TIM3_Init();
-
 
 	while (1){
 		// Sets PB7 to read truncated ADC value
-		//temp = ADC_Truncate(ADC_Value_PA7);
 		TIM4->CCR2 = ADC_Truncate(ADC_Value_PA7);
 
-		printf("%u%% \r\n", Duty_Cycle_Percent(ADC_Value_PA7));
-		Delay_mS(200);
+		//printf("%u%% \r\n", ADC_Truncate(ADC_Value_PA7));
+
+		printf("%u%% \r\n", Duty_Cycle_Percent(ADC_Truncate(ADC_Value_PA7)));
+		//printf("Hello \r\n");
+		Delay_mS(125);
 
 	}
 }
