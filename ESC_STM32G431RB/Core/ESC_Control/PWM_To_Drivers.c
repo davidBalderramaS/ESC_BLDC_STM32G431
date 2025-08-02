@@ -62,7 +62,7 @@ void PWM_PB7_TIM4_CH2_Init(void){
 
 	TIM4->PSC = 0;                   // Clk pre-scaler -> 16MHz / 160 = 100k Hz
 	TIM4->ARR = 160 - 1;             // Period     (cycle length)
-	TIM4->CCR2 = 80;                 // Sets Duty Cycle (ON state) , CCR2 for CH2
+	TIM4->CCR2 = 0;                 // Sets Duty Cycle (ON state) , CCR2 for CH2
 
 	// Other timer settings
 	TIM4->CCMR1 &= ~(0b111 << 12);
@@ -104,7 +104,7 @@ void PWM_PB6_TIM4_CH1_Init(void){
 
 	TIM4->PSC = 0;                   // Clk pre-scaler -> 16MHz / 160 = 100k Hz
 	TIM4->ARR = 160 - 1;             // Period     (cycle length)
-	TIM4->CCR1 = 80;                 // Sets Duty Cycle (ON state) , CCR1 for CH1
+	TIM4->CCR1 = 0;                 // Sets Duty Cycle (ON state) , CCR1 for CH1
 
 	// Other timer settings
 	TIM4->CCMR1 &= ~(0b111 << 4);    // Alternate register
@@ -146,7 +146,7 @@ void PWM_PB3_TIM2_CH2_Init(void){
 
 	TIM2->PSC = 0;                   // Clk pre-scaler -> 16MHz / 160 = 100k Hz
 	TIM2->ARR = 160 - 1;             // Period     (cycle length)
-	TIM2->CCR2 = 80;                 // Sets Duty Cycle (ON state) , CCR2 for CH2
+	TIM2->CCR2 = 0;                 // Sets Duty Cycle (ON state) , CCR2 for CH2
 
 	// Other timer settings
 	TIM2->CCMR1 &= ~(0b111 << 12);   // Alternate register
@@ -188,7 +188,7 @@ void PWM_PA15_TIM2_CH1_Init(void){
 
 	TIM2->PSC = 0;                   // Clk pre-scaler -> 16MHz / 160 = 100k Hz
 	TIM2->ARR = 160 - 1;             // Period     (cycle length)
-	TIM2->CCR1 = 80;                 // Sets Duty Cycle (ON state) , CCR2 for CH2
+	TIM2->CCR1 = 0;                 // Sets Duty Cycle (ON state) , CCR2 for CH2
 
 	// Other timer settings
 	TIM2->CCMR1 &= ~(0b111 << 4);    // Alternate register
@@ -230,7 +230,7 @@ void PWM_PC2_TIM1_CH3_Init(void){
 
 	TIM1->PSC = 0;                   // Clk pre-scaler -> 16MHz / 160 = 100k Hz
 	TIM1->ARR = 160 - 1;             // Period     (cycle length)
-	TIM1->CCR3 = 80;                 // Sets Duty Cycle (ON state) , CCR3 for CH3
+	TIM1->CCR3 = 0;                 // Sets Duty Cycle (ON state) , CCR3 for CH3
 
 	// Other timer settings
 	TIM1->CCMR2 &= ~(0b111 << 4);    // Alternate register
@@ -273,7 +273,7 @@ void PWM_PC3_TIM1_CH4_Init(void){
 
 	TIM1->PSC = 0;                   // Clk pre-scaler -> 16MHz / 160 = 100k Hz
 	TIM1->ARR = 160 - 1;             // Period     (cycle length)
-	TIM1->CCR4 = 80;                 // Sets Duty Cycle (ON state) , CCR2 for CH2
+	TIM1->CCR4 = 0;                 // Sets Duty Cycle (ON state) , CCR2 for CH2
 
 	// Other timer settings
 	TIM1->CCMR2 &= ~(0b111 << 12);    // Alternate register

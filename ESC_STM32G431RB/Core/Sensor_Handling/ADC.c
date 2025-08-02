@@ -102,7 +102,7 @@ void ADC1_2_IRQHandler(void) {
  *  PWM duty cycle = CCRx = 0-159 <-- For a 100k Hz PWM signal
  */
 uint16_t ADC_Truncate(int ADC_Val_Poten){
-	// truncatedVal = (userInput/4059) * 159
+	// truncatedVal = (userInput/4095) * 159
 	double ADC_Val_Truncated = (((double)ADC_Val_Poten/(ADC_Bits - 1)) * PWM_DutyCycle_Max);
 
 	// round up to nearest whole number
