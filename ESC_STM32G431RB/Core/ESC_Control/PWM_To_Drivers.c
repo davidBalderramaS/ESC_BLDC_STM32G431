@@ -203,52 +203,91 @@ void PWM_PA15_TIM2_CH1_Init(void){
 	TIM2->CR1 |= TIM_CR1_CEN;        // Enable counter on TIM1
 }
 
-// PWM for PC2 (TIM1_CH2 -> AF2)
+// PWM for PC2 (TIM1_CH3 -> AF2)
 void PWM_PC2_TIM1_CH3_Init(void){
 	// Config GPIO
-	// Init Clk access to GPIOA
-	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+	// Init Clk access to GPIOC
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
 
-	// Set PA15 output to Alt Funct Mode
-	GPIOA->MODER  &= ~(0b11 << 30);
-	GPIOA->MODER  |= (0b10 << 30);     // MODE15 = Alt Funct Mode
-	GPIOA->AFR[1] &= ~(0b1111 << 28);
-	GPIOA->AFR[1] |= (0b0001 << 28);  // AFSEL15 set to AF1
+	// Set PC2 output to Alt Funct Mode
+	GPIOC->MODER  &= ~(0b11 << 4);
+	GPIOC->MODER  |= (0b10 << 4);    // MODE2 = Alt Funct Mode
+	GPIOC->AFR[0] &= ~(0b1111 << 8);
+	GPIOC->AFR[0] |= (0b0010 << 8);  // AFSEL2 set to AF2
 
 	// GPIO settings
-	GPIOA->OSPEEDR |= (0b10 << 30);     // High speed pin
-	GPIOA->OTYPER &= ~GPIO_OTYPER_OT15; // No Push-pull
-	GPIOA->PUPDR  &= ~(0b11 << 30);     // No pull-up/pull-down
+	GPIOC->OSPEEDR |= (0b10 << 4);     // High speed pin
+	GPIOC->OTYPER &= ~GPIO_OTYPER_OT2; // No Push-pull
+	GPIOC->PUPDR  &= ~(0b11 << 4);     // No pull-up/pull-down
 
 	// Config Timer
-	// Init Clk access to TIM2
-	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;
+	// Init Clk access to TIM1
+	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
 	// Set TIM4 prescaler
 	     // freq = Sys_Clk / (PSC + 1)(ARR + 1)
 	     // 100k Hz = 16 Mhz / (0 + 1)(160 + 1)
 	     // therefore, set PSC = 0 and ARR = 159
 
-	TIM2->PSC = 0;                   // Clk pre-scaler -> 16MHz / 160 = 100k Hz
-	TIM2->ARR = 160 - 1;             // Period     (cycle length)
-	TIM2->CCR1 = 80;                 // Sets Duty Cycle (ON state) , CCR2 for CH2
+	TIM1->PSC = 0;                   // Clk pre-scaler -> 16MHz / 160 = 100k Hz
+	TIM1->ARR = 160 - 1;             // Period     (cycle length)
+	TIM1->CCR3 = 80;                 // Sets Duty Cycle (ON state) , CCR3 for CH3
 
 	// Other timer settings
-	TIM2->CCMR1 &= ~(0b111 << 4);    // Alternate register
-	TIM2->CCMR1 |=  (0b110 << 4);    // CH1 set to PWM mode 1
-	TIM2->CCMR1 |= TIM_CCMR1_OC1PE;  // Enable pre-load register CH1
+	TIM1->CCMR2 &= ~(0b111 << 4);    // Alternate register
+	TIM1->CCMR2 |=  (0b110 << 4);    // CH3 set to PWM mode 1
+	TIM1->CCMR2 |= TIM_CCMR2_OC3PE;  // Enable pre-load register CH3
 
-	TIM2->CCER &= ~TIM_CCER_CC1P;    // set output polarity to active HIGH in CH1
-	TIM2->CCER |= TIM_CCER_CC1E;     // Capture/Compare enabled for CH1
+	TIM1->CCER &= ~TIM_CCER_CC3P;    // set output polarity to active HIGH in CH3
+	TIM1->CCER |= TIM_CCER_CC3E;     // Capture/Compare enabled for CH3
 
-	TIM2->EGR |= TIM_EGR_UG;         // Update generation (re-init the counter)
-	TIM2->CR1 |= TIM_CR1_ARPE;       // Auto reload preload enable
-	TIM2->CR1 |= TIM_CR1_CEN;        // Enable counter on TIM1
+	TIM1->EGR |= TIM_EGR_UG;         // Update generation (re-init the counter)
+	TIM1->CR1 |= TIM_CR1_ARPE;       // Auto reload preload enable
+	TIM1->CR1 |= TIM_CR1_CEN;        // Enable counter on TIM1
+	//TIM1->BDTR |= TIM_BDTR_MOE;
 }
 
-// PWM for PC3 (TIM1_CH3 -> AF2)
+// PWM for PC3 (TIM1_CH4 -> AF2)
 void PWM_PC3_TIM1_CH4_Init(void){
+	// Config GPIO
+	// Init Clk access to GPIOC
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
 
+	// Set PC2 output to Alt Funct Mode
+	GPIOC->MODER  &= ~(0b11 << 6);
+	GPIOC->MODER  |= (0b10 << 6);     // MODE2 = Alt Funct Mode
+	GPIOC->AFR[0] &= ~(0b1111 << 12);
+	GPIOC->AFR[0] |= (0b0010 << 12);  // AFSEL3 set to AF2
+
+	// GPIO settings
+	GPIOC->OSPEEDR |= (0b10 << 6);     // High speed pin
+	GPIOC->OTYPER &= ~GPIO_OTYPER_OT3; // No Push-pull
+	GPIOC->PUPDR  &= ~(0b11 << 6);     // No pull-up/pull-down
+
+	// Config Timer
+	// Init Clk access to TIM1
+	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
+	// Set TIM4 prescaler
+	     // freq = Sys_Clk / (PSC + 1)(ARR + 1)
+	     // 100k Hz = 16 Mhz / (0 + 1)(160 + 1)
+	     // therefore, set PSC = 0 and ARR = 159
+
+	TIM1->PSC = 0;                   // Clk pre-scaler -> 16MHz / 160 = 100k Hz
+	TIM1->ARR = 160 - 1;             // Period     (cycle length)
+	TIM1->CCR4 = 80;                 // Sets Duty Cycle (ON state) , CCR2 for CH2
+
+	// Other timer settings
+	TIM1->CCMR2 &= ~(0b111 << 12);    // Alternate register
+	TIM1->CCMR2 |=  (0b110 << 12);    // CH4 set to PWM mode 1
+	TIM1->CCMR2 |= TIM_CCMR2_OC4PE;  // Enable pre-load register CH4
+
+	TIM1->CCER &= ~TIM_CCER_CC4P;    // set output polarity to active HIGH in CH4
+	TIM1->CCER |= TIM_CCER_CC4E;     // Capture/Compare enabled for CH4
+
+	TIM1->EGR |= TIM_EGR_UG;         // Update generation (re-init the counter)
+	TIM1->CR1 |= TIM_CR1_ARPE;       // Auto reload preload enable
+	TIM1->CR1 |= TIM_CR1_CEN;        // Enable counter on TIM1
 }
+
 /////////////////////////////////////////////////////////////////
 // PWM for PA14 (TIM8_CH2 -> AF5)
 void PWM_PA14_TIM8_CH2_Init(void){

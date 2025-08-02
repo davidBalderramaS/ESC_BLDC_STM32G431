@@ -18,10 +18,6 @@
 #include "Communication/USART_printf.h"
 #include "ESC_Control/PWM_To_Drivers.h"
 
-/*
- * -----> Branch_ADC_truncate <-----
- *
- */
 
 int main(void){
 	LED_PA10_Init();
@@ -36,9 +32,8 @@ int main(void){
 	PWM_PB6_TIM4_CH1_Init();
 	PWM_PB3_TIM2_CH2_Init();
 	PWM_PA15_TIM2_CH1_Init();
-
-	//PWM_PA14_TIM8_CH2_Init();
-	//PWM_PA13_TIM4_CH3_Init();
+	PWM_PC2_TIM1_CH3_Init();
+	PWM_PC3_TIM1_CH4_Init();
 
 	while (1){
 

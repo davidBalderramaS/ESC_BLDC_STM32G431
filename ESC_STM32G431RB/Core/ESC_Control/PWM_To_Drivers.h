@@ -14,7 +14,8 @@ void PWM_PB7_TIM4_CH2_Init(void);
 void PWM_PB6_TIM4_CH1_Init(void);
 void PWM_PB3_TIM2_CH2_Init(void);
 void PWM_PA15_TIM2_CH1_Init(void);
-
+void PWM_PC2_TIM1_CH3_Init(void);
+void PWM_PC3_TIM1_CH4_Init(void);
 
 // Dont work on Nucleo
 void PWM_PA14_TIM8_CH2_Init(void);
