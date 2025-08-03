@@ -10,6 +10,7 @@
 //#include "Sensor_Handling/ADC.h"
 #include "stm32g431xx.h"
 #include "../Sensor_Handling/ADC.h"
+#include "../Communication/USART_printf.h"
 
 /*  Pin Assignment
  *  Utils:
@@ -37,6 +38,7 @@
  *
  */
 
+volatile uint16_t temp = 0;
 
 // PWM for PB7 (TIM4_CH2 -> AF2)
 void PWM_PB7_TIM4_CH2_Init(void){
@@ -246,7 +248,7 @@ void PWM_PC2_TIM1_CH3_Init(void){
 	TIM1->EGR |= TIM_EGR_UG;         // Update generation (re-init the counter)
 	TIM1->CR1 |= TIM_CR1_ARPE;       // Auto reload preload enable
 	TIM1->CR1 |= TIM_CR1_CEN;        // Enable counter on TIM1
-	//TIM1->BDTR |= TIM_BDTR_MOE;
+	TIM1->BDTR |= TIM_BDTR_MOE;      // Enable since TIM1 is a "Special Timer"
 }
 
 // PWM for PC3 (TIM1_CH4 -> AF2)
@@ -292,33 +294,55 @@ void PWM_PC3_TIM1_CH4_Init(void){
 }
 
 // M1H
-void Set_DutyCycle_PB6_TIM4_CH1(uint16_t ADC_Poten_Truc_Value){
-	TIM4->CCR1 = ADC_Truncate(ADC_Poten_Truc_Value);
+void Set_DutyCycle_PB6_TIM4_CH1(uint16_t ADC_Poten_Trunc_Value){
+	// TEST 2
+	//temp = ADC_Poten_Trunc_Value;
+	//TIM4->CCR1 = ADC_Truncate(temp);
+	//printf("%u \r\n", temp);
+
+	// TEST 3: Passing truncated value BEFORE assigning to CCRx
+	TIM4->CCR1 = ADC_Poten_Trunc_Value;
+	//printf("%u \r\n", ADC_Poten_Trunc_Value);
+
+
+
+
+	//TIM4->CCR1 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 // M1L
-void Set_DutyCycle_PB3_TIM2_CH2(uint16_t ADC_Poten_Truc_Value){
-	TIM2->CCR2 = ADC_Truncate(ADC_Poten_Truc_Value);
+void Set_DutyCycle_PB3_TIM2_CH2(uint16_t ADC_Poten_Trunc_Value){
+	TIM2->CCR2 = ADC_Poten_Trunc_Value;
+
+	//TIM2->CCR2 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 // M2H
-void Set_DutyCycle_PA15_TIM2_CH1(uint16_t ADC_Poten_Truc_Value){
-	TIM2->CCR1 = ADC_Truncate(ADC_Poten_Truc_Value);
+void Set_DutyCycle_PA15_TIM2_CH1(uint16_t ADC_Poten_Trunc_Value){
+	TIM2->CCR1 = ADC_Poten_Trunc_Value;
+
+	//TIM2->CCR1 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 // M2L
-void Set_DutyCycle_PB7_TIM4_CH2(uint16_t ADC_Poten_Truc_Value){
-	TIM4->CCR2 = ADC_Truncate(ADC_Poten_Truc_Value);
+void Set_DutyCycle_PB7_TIM4_CH2(uint16_t ADC_Poten_Trunc_Value){
+	TIM4->CCR2 = ADC_Poten_Trunc_Value;
+
+	//TIM4->CCR2 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 // M3H
-void Set_DutyCycle_PC2_TIM1_CH3(uint16_t ADC_Poten_Truc_Value){
-	TIM1->CCR3 = ADC_Truncate(ADC_Poten_Truc_Value);
+void Set_DutyCycle_PC2_TIM1_CH3(uint16_t ADC_Poten_Trunc_Value){
+	TIM1->CCR3 = ADC_Poten_Trunc_Value;
+
+	//TIM1->CCR3 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 // M3L
-void Set_DutyCycle_PC3_TIM1_CH4(uint16_t ADC_Poten_Truc_Value){
-	TIM1->CCR4 = ADC_Truncate(ADC_Poten_Truc_Value);
+void Set_DutyCycle_PC3_TIM1_CH4(uint16_t ADC_Poten_Trunc_Value){
+	TIM1->CCR4 = ADC_Poten_Trunc_Value;
+
+	//TIM1->CCR4 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 /////////////////////////////////////////////////////////////////

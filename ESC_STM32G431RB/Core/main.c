@@ -33,33 +33,36 @@ int main(void){
 
 	PWM_PB6_TIM4_CH1_Init();  // M1H
 	PWM_PB3_TIM2_CH2_Init();  // M1L
-	PWM_PC2_TIM1_CH3_Init();  // M2H
-	PWM_PC3_TIM1_CH4_Init();  // M2L
-	PWM_PA15_TIM2_CH1_Init(); // M3H
-	PWM_PB7_TIM4_CH2_Init();  // M3L
+
+	PWM_PA15_TIM2_CH1_Init(); // M2H
+	PWM_PB7_TIM4_CH2_Init();  // M2L
+
+	PWM_PC2_TIM1_CH3_Init();  // M3H
+	PWM_PC3_TIM1_CH4_Init();  // M3L
+
 
 	while (1){
-		//Set_DutyCycle_PB6_TIM4_CH1(ADC_Value_PA7);
-
-		//Set_DutyCycle_PA15_TIM2_CH1(ADC_Value_PA7); // M2H
 
 		Open_Loop();
 
+
+		// TEST #1: Truncate Function
+		//temp = ADC_Truncate(ADC_Value_PA7);
+		//printf("ADC: %u \r\n", temp);
+		//Delay_mS(100);
+
+		// TEST 2: print truncated value thats passed onto the Set_DutyCycle Funct
+		//Set_DutyCycle_PB6_TIM4_CH1(ADC_Value_PA7);
+		//Delay_mS(100);
+
+		// TEST 3: Truncated value BEFORE passing it onto the Set_DutyCycle Funct
+		//Set_DutyCycle_PB6_TIM4_CH1(ADC_Truncate(ADC_Value_PA7));
+		//Delay_mS(100);
 	}
 }
 
 
-/*
- *      NOTES
- *
-		// Sets PB7 to read truncated ADC value
-		TIM4->CCR2 = ADC_Truncate(ADC_Value_PA7);
 
-		printf("%u%% \r\n", Duty_Cycle_Percent(ADC_Truncate(ADC_Value_PA7)));
-
-		Delay_mS(125);
- *
- */
 
 
 
