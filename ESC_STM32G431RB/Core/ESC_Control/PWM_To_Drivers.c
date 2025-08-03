@@ -6,8 +6,10 @@
  */
 
 #include "PWM_To_Drivers.h"
-#include "stm32g431xx.h"
 
+//#include "Sensor_Handling/ADC.h"
+#include "stm32g431xx.h"
+#include "../Sensor_Handling/ADC.h"
 
 /*  Pin Assignment
  *  Utils:
@@ -34,6 +36,7 @@
  *	PC0- -> COMP3_INM -> VN    <- TEMP use only
  *
  */
+
 
 // PWM for PB7 (TIM4_CH2 -> AF2)
 void PWM_PB7_TIM4_CH2_Init(void){
@@ -288,7 +291,39 @@ void PWM_PC3_TIM1_CH4_Init(void){
 	TIM1->CR1 |= TIM_CR1_CEN;        // Enable counter on TIM1
 }
 
+// M1H
+void Set_DutyCycle_PB6_TIM4_CH1(uint16_t ADC_Poten_Truc_Value){
+	TIM4->CCR1 = ADC_Truncate(ADC_Poten_Truc_Value);
+}
+
+// M1L
+void Set_DutyCycle_PB3_TIM2_CH2(uint16_t ADC_Poten_Truc_Value){
+	TIM2->CCR2 = ADC_Truncate(ADC_Poten_Truc_Value);
+}
+
+// M2H
+void Set_DutyCycle_PA15_TIM2_CH1(uint16_t ADC_Poten_Truc_Value){
+	TIM2->CCR1 = ADC_Truncate(ADC_Poten_Truc_Value);
+}
+
+// M2L
+void Set_DutyCycle_PB7_TIM4_CH2(uint16_t ADC_Poten_Truc_Value){
+	TIM4->CCR2 = ADC_Truncate(ADC_Poten_Truc_Value);
+}
+
+// M3H
+void Set_DutyCycle_PC2_TIM1_CH3(uint16_t ADC_Poten_Truc_Value){
+	TIM1->CCR3 = ADC_Truncate(ADC_Poten_Truc_Value);
+}
+
+// M3L
+void Set_DutyCycle_PC3_TIM1_CH4(uint16_t ADC_Poten_Truc_Value){
+	TIM1->CCR4 = ADC_Truncate(ADC_Poten_Truc_Value);
+}
+
 /////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
 // PWM for PA14 (TIM8_CH2 -> AF5)
 void PWM_PA14_TIM8_CH2_Init(void){
 	// Config GPIO

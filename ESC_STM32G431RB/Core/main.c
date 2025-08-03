@@ -16,6 +16,7 @@
 #include "Sensor_Handling/ADC.h"
 #include "Communication/USART_printf.h"
 #include "ESC_Control/PWM_To_Drivers.h"
+#include "ESC_Control/OpenLoop_Config.h"
 #include "Utils/Delay_Timer.h"
 #include "Utils/Utils.h"
 
@@ -28,7 +29,7 @@ int main(void){
 
 	//COMP1_Init();     // PA1+ | PA4-  -> PB
 	//COMP3_Init_v2();  // PC1+ | PC0-  -> PC
-	COMP4_Init_v2();    // PB0+ | PB2-  -> PA
+	//COMP4_Init_v2();  // PB0+ | PB2-  -> PA
 
 	PWM_PB6_TIM4_CH1_Init();  // M1H
 	PWM_PB3_TIM2_CH2_Init();  // M1L
@@ -37,22 +38,28 @@ int main(void){
 	PWM_PA15_TIM2_CH1_Init(); // M3H
 	PWM_PB7_TIM4_CH2_Init();  // M3L
 
-
 	while (1){
-		// Sets PB7 to read truncated ADC value
-		TIM4->CCR2 = ADC_Truncate(ADC_Value_PA7);
+		//Set_DutyCycle_PB6_TIM4_CH1(ADC_Value_PA7);
 
-		//printf("%u%% \r\n", ADC_Truncate(ADC_Value_PA7));
+		//Set_DutyCycle_PA15_TIM2_CH1(ADC_Value_PA7); // M2H
 
-		printf("%u%% \r\n", Duty_Cycle_Percent(ADC_Truncate(ADC_Value_PA7)));
-		//printf("Hello \r\n");
-		Delay_mS(125);
+		Open_Loop();
 
 	}
 }
 
 
+/*
+ *      NOTES
+ *
+		// Sets PB7 to read truncated ADC value
+		TIM4->CCR2 = ADC_Truncate(ADC_Value_PA7);
 
+		printf("%u%% \r\n", Duty_Cycle_Percent(ADC_Truncate(ADC_Value_PA7)));
+
+		Delay_mS(125);
+ *
+ */
 
 
 
