@@ -11,7 +11,8 @@
 #include "stm32g431xx.h"
 #include "../Sensor_Handling/ADC.h"
 
-#define PHASE_DELAY_MS 20
+#define PHASE_DELAY_MS 3     // 1000 uS = 1 mS
+#define PHASE_DELAY_US 3000
 
 void Open_Loop(void);
 

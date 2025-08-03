@@ -20,6 +20,10 @@
 #include "Utils/Delay_Timer.h"
 #include "Utils/Utils.h"
 
+/*
+ * ----->    BRANCH    <------
+ *
+ */
 
 int main(void){
 	LED_PA10_Init();

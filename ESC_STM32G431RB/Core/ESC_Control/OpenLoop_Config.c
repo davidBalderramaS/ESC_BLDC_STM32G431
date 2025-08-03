@@ -34,10 +34,11 @@ void Open_Loop(void){
 			Set_DutyCycle_PC2_TIM1_CH3(FLOATING);  // M3H
 			Set_DutyCycle_PC3_TIM1_CH4(FLOATING);  // M3L
 
-			printf("Case: %u \r\n", Phase_State);
-			printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			//printf("Case: %u \r\n", Phase_State);
+			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(PHASE_DELAY_MS);
+			Delay_uS(PHASE_DELAY_US);
 			Phase_State++;
 			break;
 
@@ -53,10 +54,11 @@ void Open_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(FLOATING);  // M3H
 
-			printf("Case: %u \r\n", Phase_State);
-			printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			//printf("Case: %u \r\n", Phase_State);
+			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(PHASE_DELAY_MS);
+			Delay_uS(PHASE_DELAY_US);
 			Phase_State++;
 			break;
 
@@ -72,10 +74,11 @@ void Open_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(FLOATING);  // M3H
 
-			printf("Case: %u \r\n", Phase_State);
-			printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			//printf("Case: %u \r\n", Phase_State);
+			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(PHASE_DELAY_MS);
+			Delay_uS(PHASE_DELAY_US);
 			Phase_State++;
 			break;
 
@@ -91,10 +94,11 @@ void Open_Loop(void){
 			Set_DutyCycle_PC2_TIM1_CH3(FLOATING);  // M3H
 			Set_DutyCycle_PC3_TIM1_CH4(FLOATING);  // M3L
 
-			printf("Case: %u \r\n", Phase_State);
-			printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			//printf("Case: %u \r\n", Phase_State);
+			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(PHASE_DELAY_MS);
+			Delay_uS(PHASE_DELAY_US);
 			Phase_State++;
 			break;
 
@@ -110,10 +114,11 @@ void Open_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(FLOATING);  // M2L
 			Set_DutyCycle_PC3_TIM1_CH4(FLOATING);  // M3L
 
-			printf("Case: %u \r\n", Phase_State);
-			printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			//printf("Case: %u \r\n", Phase_State);
+			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(PHASE_DELAY_MS);
+			Delay_uS(PHASE_DELAY_US);
 			Phase_State++;
 			break;
 
@@ -129,10 +134,11 @@ void Open_Loop(void){
 			Set_DutyCycle_PA15_TIM2_CH1(FLOATING); // M2H
 			Set_DutyCycle_PC3_TIM1_CH4(FLOATING);  // M3L
 
-			printf("Case: %u \r\n", Phase_State);
-			printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			//printf("Case: %u \r\n", Phase_State);
+			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(PHASE_DELAY_MS);
+			Delay_uS(PHASE_DELAY_US);
 			Phase_State = 1;
 			break;
 
