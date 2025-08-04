@@ -18,7 +18,7 @@
 
 #define COMP_FLOATING          0         // Sets PWM duty cycle to 0
 #define COMP_PHASE_DELAY_uS    3000
-volatile uint16_t COMP_Phase_State = 6;  // Since Open_Loop ends off at step 6, start at 6
+volatile uint16_t COMP_Phase_State = 1;  // Since Open_Loop ends off at step 6, start at 6
 
 
 void COMP_Loop(void){
@@ -36,17 +36,17 @@ void COMP_Loop(void){
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", Phase_State);
+			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
 			//Delay_mS(PHASE_DELAY_MS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
-			while(1){
-				// if COMP1_INP > COMP1_INM
-				if (COMP3->CSR & COMP_CSR_VALUE){
-					// Next State
-					COMP_Phase_State++;
-				}
+
+			// if COMP1_INP > COMP1_INM
+			if (COMP3->CSR & COMP_CSR_VALUE){
+				// Next State
+				COMP_Phase_State++;
+				//Delay_mS(300);
 			}
 			break;
 
@@ -62,17 +62,15 @@ void COMP_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(COMP_FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 
-			//printf("Case: %u \r\n", Phase_State);
+			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
 			//Delay_mS(PHASE_DELAY_MS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
-			while(1){
-				// if COMP1_INP > COMP1_INM
-				if (COMP2->CSR & COMP_CSR_VALUE){
-					// Next State
-					COMP_Phase_State++;
-				}
+			if (COMP3->CSR & COMP_CSR_VALUE){
+				// Next State
+				COMP_Phase_State++;
+				//Delay_mS(300);
 			}
 			break;
 
@@ -88,17 +86,17 @@ void COMP_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(COMP_FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 
-			//printf("Case: %u \r\n", Phase_State);
+			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
 			//Delay_mS(PHASE_DELAY_MS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
-			while(1){
-				// if COMP1_INP > COMP1_INM
-				if (COMP1->CSR & COMP_CSR_VALUE){
-					// Next State
-					COMP_Phase_State++;
-				}
+
+			// if COMP1_INP > COMP1_INM
+			if (COMP1->CSR & COMP_CSR_VALUE){
+				// Next State
+				COMP_Phase_State++;
+				//Delay_mS(300);
 			}
 			break;
 
@@ -114,17 +112,17 @@ void COMP_Loop(void){
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", Phase_State);
+			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
 			//Delay_mS(PHASE_DELAY_MS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
-			while(1){
-				// if COMP1_INP > COMP1_INM
-				if (COMP3->CSR & COMP_CSR_VALUE){
-					// Next State
-					COMP_Phase_State++;
-				}
+			// if COMP1_INP > COMP1_INM
+
+			if (COMP4->CSR & COMP_CSR_VALUE){
+				// Next State
+				COMP_Phase_State++;
+				//Delay_mS(300);
 			}
 			break;
 
@@ -140,17 +138,16 @@ void COMP_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(COMP_FLOATING);  // M2L
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", Phase_State);
+			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
 			//Delay_mS(PHASE_DELAY_MS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
-			while(1){
-				// if COMP1_INP > COMP1_INM
-				if (COMP2->CSR & COMP_CSR_VALUE){
-					// Next State
-					COMP_Phase_State++;
-				}
+			// if COMP1_INP > COMP1_INM
+			if (COMP3->CSR & COMP_CSR_VALUE){
+				// Next State
+				COMP_Phase_State++;
+				//Delay_mS(300);
 			}
 			break;
 
@@ -166,17 +163,17 @@ void COMP_Loop(void){
 			Set_DutyCycle_PA15_TIM2_CH1(COMP_FLOATING); // M2H
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", Phase_State);
+			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
 			//Delay_mS(PHASE_DELAY_MS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
-			while(1){
-				// if COMP1_INP > COMP1_INM
-				if (COMP1->CSR & COMP_CSR_VALUE){
-					// Next State
-					COMP_Phase_State = 1;
-				}
+
+			// if COMP1_INP > COMP1_INM
+			if (COMP1->CSR & COMP_CSR_VALUE){
+				// Next State
+				COMP_Phase_State = 1;
+				//Delay_mS(300);
 			}
 			break;
 
@@ -184,3 +181,10 @@ void COMP_Loop(void){
 			break;
 	}
 }
+
+
+/*
+ * REMOVE PRINTF statements
+ *
+ *
+ */

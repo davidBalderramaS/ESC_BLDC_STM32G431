@@ -13,7 +13,7 @@
 
 #define PHASE_DELAY_MS   3        // 1000 uS = 1 mS
 #define PHASE_DELAY_US   3000
-#define OPEN_LOOP_DELAY  50       // How many cycles before breaking Open_Loop();
+#define OPEN_LOOP_DELAY  500       // How many cycles before breaking Open_Loop();
 
 extern volatile uint16_t toggle_State; // toggles Open_Loop() -> COMP_Loop()
 

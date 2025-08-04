@@ -16,7 +16,7 @@
 
 
 #define FLOATING          0         // Sets PWM duty cycle to 0
-#define OPEN_LOOP_DELAY  50         // How many cycles before breaking Open_Loop();
+//#define OPEN_LOOP_DELAY  50         // How many cycles before breaking Open_Loop();
 
 volatile uint16_t Phase_State = 1;  // Commutational step pattern
 volatile uint16_t toggle_State = 0; // toggles Open_Loop() -> COMP_Loop()
@@ -149,9 +149,8 @@ void Open_Loop(void){
 
 			// Switches to COMP_Loop() after "OPEN_LOOP_DELAY" number of cycles
 			counter++;
-			printf("CNT: %lu  \r\n", counter);
+			//printf("CNT: %lu  \r\n", counter);
 			if(counter == OPEN_LOOP_DELAY){
-				printf("%lu \r\n", counter);
 				toggle_State = 1;
 			}
 			break;

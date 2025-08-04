@@ -53,7 +53,6 @@ int main(void){
 		else if (toggle_State == 1){
 			COMP_Loop();
 		}
-
 	}
 }
 
