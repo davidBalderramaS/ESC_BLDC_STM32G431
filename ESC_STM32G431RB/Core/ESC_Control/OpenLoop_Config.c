@@ -15,11 +15,17 @@
 #include "../Communication/USART_printf.h"
 
 
-#define FLOATING        0     // Sets PWM duty cycle to 0
+#define FLOATING          0         // Sets PWM duty cycle to 0
+#define OPEN_LOOP_DELAY  50         // How many cycles before breaking Open_Loop();
 
-volatile uint16_t Phase_State = 1;
+volatile uint16_t Phase_State = 1;  // Commutational step pattern
+volatile uint16_t toggle_State = 0; // toggles Open_Loop() -> COMP_Loop()
+uint32_t counter = 0;
+
 
 void Open_Loop(void){
+
+	//printf("State: %u   ", toggle_State);
 
 	switch(Phase_State){
 		case 1:
@@ -140,6 +146,14 @@ void Open_Loop(void){
 			//Delay_mS(PHASE_DELAY_MS);
 			Delay_uS(PHASE_DELAY_US);
 			Phase_State = 1;
+
+			// Switches to COMP_Loop() after "OPEN_LOOP_DELAY" number of cycles
+			counter++;
+			printf("CNT: %lu  \r\n", counter);
+			if(counter == OPEN_LOOP_DELAY){
+				printf("%lu \r\n", counter);
+				toggle_State = 1;
+			}
 			break;
 
 		default:
