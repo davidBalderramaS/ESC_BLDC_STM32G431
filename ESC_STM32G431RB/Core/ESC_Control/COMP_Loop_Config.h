@@ -8,7 +8,6 @@
 #ifndef ESC_CONTROL_COMP_LOOP_CONFIG_H_
 #define ESC_CONTROL_COMP_LOOP_CONFIG_H_
 
-#define COMP_PHASE_DELAY_uS    3000
 
 void COMP_Loop(void);
 

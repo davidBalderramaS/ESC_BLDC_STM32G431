@@ -14,14 +14,18 @@
 #include "../Utils/Delay_Timer.h"
 #include "../Communication/USART_printf.h"
 #include "../Back_EMF/COMPx.h"
+#include "../Utils/Utils.h"
 
-
-#define COMP_FLOATING          0         // Sets PWM duty cycle to 0
-#define COMP_PHASE_DELAY_uS    3000
+#define  COMP_FLOATING          0         // Sets PWM duty cycle to 0
+#define  COMP_PHASE_DELAY_uS    300      // default == 30, open_loop delay == 3000 uS
+#define  COMP_PHASE_DELAY_mS    200
 volatile uint16_t COMP_Phase_State = 1;  // Since Open_Loop ends off at step 6, start at 6
 
 
 void COMP_Loop(void){
+
+	// Set LED_PA10 ON
+	GPIOA->ODR |= LED_PA10;
 
 	switch(COMP_Phase_State){
 		case 1:
@@ -39,11 +43,15 @@ void COMP_Loop(void){
 			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(COMP_PHASE_DELAY_mS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
 
-			// if COMP1_INP > COMP1_INM
-			if (COMP3->CSR & COMP_CSR_VALUE){
+			// Allow back-EMF to settle
+			Delay_uS(COMP_PHASE_DELAY_uS);
+
+			// P3 == Floating
+			// if COMP4_INP > COMP4_INM
+			if (COMP4->CSR & COMP_CSR_VALUE){
 				// Next State
 				COMP_Phase_State++;
 				//Delay_mS(300);
@@ -65,8 +73,14 @@ void COMP_Loop(void){
 			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(COMP_PHASE_DELAY_mS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
+
+			// Allow back-EMF to settle
+			Delay_uS(COMP_PHASE_DELAY_uS);
+
+			// P2 == Floating
+			// if COMP3_INP > COMP3_INM
 			if (COMP3->CSR & COMP_CSR_VALUE){
 				// Next State
 				COMP_Phase_State++;
@@ -89,9 +103,13 @@ void COMP_Loop(void){
 			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(COMP_PHASE_DELAY_mS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
 
+			// Allow back-EMF to settle
+			Delay_uS(COMP_PHASE_DELAY_uS);
+
+			// P1 == Floating
 			// if COMP1_INP > COMP1_INM
 			if (COMP1->CSR & COMP_CSR_VALUE){
 				// Next State
@@ -115,10 +133,15 @@ void COMP_Loop(void){
 			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(COMP_PHASE_DELAY_mS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
 			// if COMP1_INP > COMP1_INM
 
+			// Allow back-EMF to settle
+			Delay_uS(COMP_PHASE_DELAY_uS);
+
+			// P3 == Floating
+			// if COMP4_INP > COMP4_INM
 			if (COMP4->CSR & COMP_CSR_VALUE){
 				// Next State
 				COMP_Phase_State++;
@@ -141,9 +164,14 @@ void COMP_Loop(void){
 			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(COMP_PHASE_DELAY_mS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
-			// if COMP1_INP > COMP1_INM
+
+			// Allow back-EMF to settle
+			Delay_uS(COMP_PHASE_DELAY_uS);
+
+			// P2 == Floating
+			// if COMP3_INP > COMP3_INM
 			if (COMP3->CSR & COMP_CSR_VALUE){
 				// Next State
 				COMP_Phase_State++;
@@ -166,9 +194,13 @@ void COMP_Loop(void){
 			//printf("Case: %u \r\n", COMP_Phase_State);
 			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
+			//Delay_mS(COMP_PHASE_DELAY_mS);
 			//Delay_uS(COMP_PHASE_DELAY_uS);
 
+			// Allow back-EMF to settle
+			Delay_uS(COMP_PHASE_DELAY_uS);
+
+			// P1 == Floating
 			// if COMP1_INP > COMP1_INM
 			if (COMP1->CSR & COMP_CSR_VALUE){
 				// Next State
@@ -183,8 +215,3 @@ void COMP_Loop(void){
 }
 
 
-/*
- * REMOVE PRINTF statements
- *
- *
- */

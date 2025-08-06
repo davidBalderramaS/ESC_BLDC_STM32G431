@@ -19,7 +19,7 @@ void COMP1_Init(void){
 	// Enable GPIOA Clk
 	RCC->AHB2ENR |= (1 << 0);
 	// Enable COMPx Clk access
-	RCC->APB2ENR |= (1 << 0);
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
 	// Set PA1+ to Analog Mode
 	GPIOA->MODER &= ~(0b11 << 2);
@@ -51,7 +51,7 @@ void COMP2_Init_v2(void){
 	// Enable GPIOA Clk
 	RCC->AHB2ENR |= (1 << 0);
 	// Enable COMPx Clk access
-	RCC->APB2ENR |= (1 << 0);
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
 	// Set PA7+ to Analog Mode
 	GPIOA->MODER &= ~(0b11 << 14);
@@ -84,7 +84,7 @@ void COMP3_Init_v2(void){
 	// Enable GPIOC Clk
 	RCC->AHB2ENR |= (1 << 2);
 	// Enable COMPx Clk access
-	RCC->APB2ENR |= (1 << 0);
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
 	// Set PC1+ to Analog Mode
 	GPIOC->MODER &= ~(0b11 << 2); // <-THIS
