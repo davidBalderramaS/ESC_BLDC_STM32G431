@@ -9,15 +9,20 @@
  */
 
 #include "COMPx.h"
-
+#include "../ESC_Control/COMP_Loop_Config.h"
+#include "../Utils/Utils.h"
 #include "stm32g4xx.h"
+#include "stm32g431xx.h"
 #include <stdio.h>
+
+volatile uint16_t phase1_counter = 0;
+volatile uint16_t case_interrupt_counter = 0;
 
 // COMP1_INP -> PA1+
 // COMP1_INM -> PA4-
 void COMP1_Init(void){
 	// Enable GPIOA Clk
-	RCC->AHB2ENR |= (1 << 0);
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
 	// Enable COMPx Clk access
 	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
@@ -36,20 +41,29 @@ void COMP1_Init(void){
 	// Clear CSR
 	COMP1->CSR = 0;
 
+	// Non-inverted polarity
+	COMP1->CSR &= ~COMP_CSR_POLARITY;
+
 	// Set COMP1_INP input to PA1
 	COMP1->CSR &= ~(1 << 8);
 	// Set COMP1_INM input to PA4
 	COMP1->CSR |= (0b110 << 4);
 
+	// EXTI mode
+	//COMP1->CSR |= (0b0000 << 24);
+
+	// Enable interrupt
+	//COMP1->CSR |= COMP_CSR_ITEN;
+
 	// Enable COMP1
-	COMP1->CSR |= (1 << 0);
+	COMP1->CSR |= COMP_CSR_EN;
 }
 
 // COMP2_INP -> PA7+
 // COMP2_INM -> PA5-
 void COMP2_Init_v2(void){
 	// Enable GPIOA Clk
-	RCC->AHB2ENR |= (1 << 0);
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
 	// Enable COMPx Clk access
 	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
@@ -75,14 +89,14 @@ void COMP2_Init_v2(void){
 	COMP2->CSR |= (0b110 << 4);
 
 	// Enable COMP2
-	COMP2->CSR |= (1 << 0);
+	COMP2->CSR |= COMP_CSR_EN;
 }
 
 // COMP3_INP -> PC1+
 // COMP3_INM -> PC0-
 void COMP3_Init_v2(void){
 	// Enable GPIOC Clk
-	RCC->AHB2ENR |= (1 << 2);
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
 	// Enable COMPx Clk access
 	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
@@ -106,7 +120,7 @@ void COMP3_Init_v2(void){
 	COMP3->CSR |= (0b111 << 4);
 
 	// Enable COMP3
-	COMP3->CSR |= (1 << 0);
+	COMP3->CSR |= COMP_CSR_EN;
 }
 
 // COMP4_INP -> PB0+
@@ -136,10 +150,127 @@ void COMP4_Init_v2(void){
 	// Set COMP4_INM input to PB2-
 	COMP4->CSR |= (0b111 << 4);
 
+	// EXTI mode
+	//COMP1->CSR |= (0b0000 << 24);
+
 	// Enable COMP4
-	COMP4->CSR |= (1 << 0);
+	COMP4->CSR |= COMP_CSR_EN;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
+// Enables interrupt at COMP1 output -> P1
+void Enable_COMP1_Interrupt(void){
+	// Rising edge trigger (Table 101. EXTI lines connections)
+	EXTI->RTSR1 |= EXTI_RTSR1_RT21;
+
+	// Unmask EXTI line 21 (enable interrupt)
+	EXTI->IMR1 |= EXTI_IMR1_IM21;
+
+	// this is going to reset main switch case from 6 back to 1 (P1 is last phase in cycle)
+	phase1_counter++;
+	// phase 1 == case 1
+	case_interrupt_counter = 1;
+
+	NVIC_EnableIRQ(COMP1_2_3_IRQn);
+	NVIC_SetPriority(COMP1_2_3_IRQn, 1); // Optional priority
+}
+
+// Enables interrupt at COMP3 output -> P2
+void Enable_COMP3_Interrupt(void){
+	// Rising edge trigger (Table 101. EXTI lines connections)
+	EXTI->RTSR1 |= EXTI_RTSR1_RT29;
+
+	// Unmask EXTI line 21 (enable interrupt)
+	EXTI->IMR1 |= EXTI_IMR1_IM29;
+
+	// phase 2 == case 2
+	case_interrupt_counter = 2;
+
+	NVIC_EnableIRQ(COMP1_2_3_IRQn);
+	NVIC_SetPriority(COMP1_2_3_IRQn, 1); // Optional priority
+}
+
+// Enables interrupt at COMP4 output -> P3
+void Enable_COMP4_Interrupt(void){
+	//GPIOA->ODR |= LED_PA10;
+
+	// Rising edge trigger (Table 101. EXTI lines connections)
+	EXTI->RTSR1 |= EXTI_RTSR1_RT30;
+
+	// Unmask EXTI line 30 (enable interrupt)
+	EXTI->IMR1 |= EXTI_IMR1_IM30;
+
+	// phase 3 == case 4
+	case_interrupt_counter = 3;
+
+	NVIC_EnableIRQ(COMP1_2_3_IRQn);
+	NVIC_SetPriority(COMP1_2_3_IRQn, 1); // Optional priority
+}
+
+void Disable_All_COMP_Interrupts(void) {
+    //EXTI->IMR1 &= ~EXTI_IMR1_IM21; // COMP1 -> P1
+    //EXTI->IMR1 &= ~EXTI_IMR1_IM29; // COMP3 -> P2
+   // EXTI->IMR1 &= ~EXTI_IMR1_IM30; // COMP4 -> P3
+
+	NVIC_DisableIRQ(COMP1_2_3_IRQn);
+}
+
+// This is what's called when COMP1,2,3 interrupts are triggered
+void COMP1_2_3_IRQHandler(void) {
+	//GPIOA->ODR |= LED_PA10;
+	printf("hello \r\n");
+
+	switch(case_interrupt_counter){
+		// Phase 1
+		case 1:
+				//GPIOA->ODR |= LED_PA10;
+				// phase 1 -> COMP1 output
+				if (EXTI->PR1 & EXTI_PR1_PIF21) {
+					EXTI->PR1 |= EXTI_PR1_PIF21; // Clear flag
+
+					// Disable interrupts. Prevent double fire
+					Disable_All_COMP_Interrupts();
+
+					// Go to next switch case
+					if(phase1_counter == 2){
+						COMP_Phase_State = 1; // This allows switch case 6 to restart at 1 (loop)
+			        	                      // phase1 is the last phase step so we reset it to 1
+						phase1_counter = 0;   // reset counter
+					}
+					else {
+						COMP_Phase_State++;
+			    	}
+				}
+				break;
+		// Phase 2
+		case 2:
+				// phase 2 -> COMP3 output
+				if (EXTI->PR1 & EXTI_PR1_PIF29) {
+					EXTI->PR1 |= EXTI_PR1_PIF29; // Clear pending flag (write 1 to clear)
+
+					// Disable interrupts. Prevent double fire
+					Disable_All_COMP_Interrupts();
+
+					// Go to next state
+					COMP_Phase_State++;
+				}
+				break;
+		// Phase 3
+		case 3:
+				// phase 3 -> COMP4 output
+				if (EXTI->PR1 & EXTI_PR1_PIF30) {
+					EXTI->PR1 |= EXTI_PR1_PIF30; // Clear pending flag (write 1 to clear)
+
+					// Disable interrupts. Prevent double fire
+					Disable_All_COMP_Interrupts();
+
+					// Go to next state
+					COMP_Phase_State++;
+				}
+				break;
+		}
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // SOLDER BRIDGE  -> MODIFY TO USE on nucleo board :(
@@ -171,7 +302,7 @@ void COMP2_Init(void){
 	COMP2->CSR |= (0b111 << 4);
 
 	// Enable COMP2
-	COMP2->CSR |= (1 << 0);
+	COMP2->CSR |= COMP_CSR_EN;
 }
 
 // COMP3_INP -> PA0+
@@ -205,7 +336,7 @@ void COMP3_Init(void){
 	COMP3->CSR |= (0b110 << 4);
 
 	// Enable COMP3
-	COMP3->CSR |= (1 << 0);
+	COMP3->CSR |= COMP_CSR_EN;
 }
 
 

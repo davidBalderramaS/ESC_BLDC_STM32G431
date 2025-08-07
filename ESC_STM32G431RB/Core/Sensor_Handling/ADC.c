@@ -80,7 +80,7 @@ void ADC_Poten_PA7_Init(void){
     ADC2->IER |= ADC_IER_EOCIE;
 
     // Enable ADC interrupt in NVIC
-    NVIC_SetPriority(ADC1_2_IRQn, 1);  // Optional: Set priority
+    NVIC_SetPriority(ADC1_2_IRQn, 2);  // Optional: Set priority
     NVIC_EnableIRQ(ADC1_2_IRQn);
 
     // Start ADC conversion (triggered by TIM3_TRGO)

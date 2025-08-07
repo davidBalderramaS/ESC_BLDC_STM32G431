@@ -21,7 +21,9 @@
 #include "Utils/Delay_Timer.h"
 #include "Utils/Utils.h"
 
-
+/*
+ *       BRANCH
+ */
 
 int main(void){
 	LED_PA10_Init();
@@ -46,17 +48,41 @@ int main(void){
 	PWM_PC2_TIM1_CH3_Init();  // M3H
 	PWM_PC3_TIM1_CH4_Init();  // M3L
 
+	// Ensure global interrupts are enabled
+	if (__get_PRIMASK() & 1){
+		__enable_irq(); // Enable global interrupts if disabled
+	}
 
 	while (1){
 		if (toggle_State == 0){
+			// No feedback. Manually triggers commutational steps
 			Open_Loop();
 		}
 		else if (toggle_State == 1){
-			COMP_Loop();
+			// Uses feedback from back EMF to trigger commutational steps
+			//Closed_Loop();
+
+	        if (COMP4->CSR & COMP_CSR_VALUE){
+	            GPIOA->ODR &= LED_PA10;
+	        }
+	        else {
+	            GPIOA->ODR |= LED_PA10;
+	        }
+	        Closed_Loop();
 		}
 	}
 }
 
+
+/*
+ *  Somewhere along the lines, my COMPx stopped working.
+ *  They no longer are tracking or measuring
+ *
+ *  Essentially, they are always tracking the value of bit "COMP_CSR_VALUE" to be 0
+ *  even though I'm applying a controlled voltage so that COMP_INP > COMP_INM
+ *                                                            3V   >   1V
+ *
+ */
 
 
 

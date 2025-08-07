@@ -17,15 +17,16 @@
 #include "../Utils/Utils.h"
 
 #define  COMP_FLOATING          0         // Sets PWM duty cycle to 0
-#define  COMP_PHASE_DELAY_uS    300      // default == 30, open_loop delay == 3000 uS
+#define  COMP_PHASE_DELAY_uS    50      // default == 30, open_loop delay == 3000 uS
 #define  COMP_PHASE_DELAY_mS    200
+
 volatile uint16_t COMP_Phase_State = 1;  // Since Open_Loop ends off at step 6, start at 6
 
+// Feedback system using back emf signal
+void Closed_Loop(void){
 
-void COMP_Loop(void){
-
-	// Set LED_PA10 ON
-	GPIOA->ODR |= LED_PA10;
+	// Set LED_PA10 ON to indicate Closed_Loop() mode
+	//GPIOA->ODR |= LED_PA10;
 
 	switch(COMP_Phase_State){
 		case 1:
@@ -40,22 +41,16 @@ void COMP_Loop(void){
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", COMP_Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			printf("Case: %u \r\n", COMP_Phase_State);
 
 			//Delay_mS(COMP_PHASE_DELAY_mS);
-			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P3 == Floating
-			// if COMP4_INP > COMP4_INM
-			if (COMP4->CSR & COMP_CSR_VALUE){
-				// Next State
-				COMP_Phase_State++;
-				//Delay_mS(300);
-			}
+			// call interrupt to wait for COMP4_INP > COMP4_INM
+			Enable_COMP4_Interrupt();
 			break;
 
 		case 2:
@@ -70,22 +65,16 @@ void COMP_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(COMP_FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 
-			//printf("Case: %u \r\n", COMP_Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			printf("Case: %u \r\n", COMP_Phase_State);
 
 			//Delay_mS(COMP_PHASE_DELAY_mS);
-			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P2 == Floating
-			// if COMP3_INP > COMP3_INM
-			if (COMP3->CSR & COMP_CSR_VALUE){
-				// Next State
-				COMP_Phase_State++;
-				//Delay_mS(300);
-			}
+			// call interrupt to wait for COMP3_INP > COMP3_INM
+			Enable_COMP3_Interrupt();
 			break;
 
 		case 3:
@@ -100,22 +89,16 @@ void COMP_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(COMP_FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 
-			//printf("Case: %u \r\n", COMP_Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			printf("Case: %u \r\n", COMP_Phase_State);
 
 			//Delay_mS(COMP_PHASE_DELAY_mS);
-			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P1 == Floating
-			// if COMP1_INP > COMP1_INM
-			if (COMP1->CSR & COMP_CSR_VALUE){
-				// Next State
-				COMP_Phase_State++;
-				//Delay_mS(300);
-			}
+			// call interrupt to wait for COMP1_INP > COMP1_INM
+			Enable_COMP1_Interrupt();
 			break;
 
 		case 4:
@@ -130,23 +113,16 @@ void COMP_Loop(void){
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", COMP_Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			printf("Case: %u \r\n", COMP_Phase_State);
 
 			//Delay_mS(COMP_PHASE_DELAY_mS);
-			//Delay_uS(COMP_PHASE_DELAY_uS);
-			// if COMP1_INP > COMP1_INM
 
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P3 == Floating
-			// if COMP4_INP > COMP4_INM
-			if (COMP4->CSR & COMP_CSR_VALUE){
-				// Next State
-				COMP_Phase_State++;
-				//Delay_mS(300);
-			}
+			// call interrupt to wait for COMP4_INP > COMP4_INM
+			Enable_COMP4_Interrupt();
 			break;
 
 		case 5:
@@ -161,22 +137,16 @@ void COMP_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(COMP_FLOATING);  // M2L
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", COMP_Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			printf("Case: %u \r\n", COMP_Phase_State);
 
 			//Delay_mS(COMP_PHASE_DELAY_mS);
-			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P2 == Floating
-			// if COMP3_INP > COMP3_INM
-			if (COMP3->CSR & COMP_CSR_VALUE){
-				// Next State
-				COMP_Phase_State++;
-				//Delay_mS(300);
-			}
+			// call interrupt to wait for COMP3_INP > COMP3_INM
+			Enable_COMP3_Interrupt();
 			break;
 
 		case 6:
@@ -191,22 +161,16 @@ void COMP_Loop(void){
 			Set_DutyCycle_PA15_TIM2_CH1(COMP_FLOATING); // M2H
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", COMP_Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
+			printf("Case: %u \r\n", COMP_Phase_State);
 
 			//Delay_mS(COMP_PHASE_DELAY_mS);
-			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P1 == Floating
-			// if COMP1_INP > COMP1_INM
-			if (COMP1->CSR & COMP_CSR_VALUE){
-				// Next State
-				COMP_Phase_State = 1;
-				//Delay_mS(300);
-			}
+			// call interrupt to wait for COMP1_INP > COMP1_INM
+			Enable_COMP1_Interrupt();
 			break;
 
 		default:
