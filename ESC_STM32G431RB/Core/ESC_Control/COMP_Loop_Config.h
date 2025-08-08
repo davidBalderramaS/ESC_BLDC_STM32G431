@@ -11,6 +11,7 @@
 #include "stm32g431xx.h"
 
 extern volatile uint16_t COMP_Phase_State;
+//extern volatile uint16_t phase1_2_counter;
 
 void Closed_Loop(void);
 

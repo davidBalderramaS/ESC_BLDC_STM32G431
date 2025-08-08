@@ -15,7 +15,6 @@
 #include "stm32g431xx.h"
 #include <stdio.h>
 
-volatile uint16_t phase1_counter = 0;
 volatile uint16_t case_interrupt_counter = 0;
 
 // COMP1_INP -> PA1+
@@ -40,21 +39,12 @@ void COMP1_Init(void){
 	// Init COMP1
 	// Clear CSR
 	COMP1->CSR = 0;
-
 	// Non-inverted polarity
-	COMP1->CSR &= ~COMP_CSR_POLARITY;
-
+	//COMP1->CSR &= ~COMP_CSR_POLARITY;
 	// Set COMP1_INP input to PA1
 	COMP1->CSR &= ~(1 << 8);
 	// Set COMP1_INM input to PA4
 	COMP1->CSR |= (0b110 << 4);
-
-	// EXTI mode
-	//COMP1->CSR |= (0b0000 << 24);
-
-	// Enable interrupt
-	//COMP1->CSR |= COMP_CSR_ITEN;
-
 	// Enable COMP1
 	COMP1->CSR |= COMP_CSR_EN;
 }
@@ -78,16 +68,13 @@ void COMP2_Init_v2(void){
 	GPIOA->PUPDR &= ~(0b11 << 10);
 	GPIOA->PUPDR &= ~(0b11 << 14);
 
-
 	// Init COMP2
 	// Clear CSR
 	COMP2->CSR = 0;
-
 	// Set COMP2_INP input to PA7+
 	COMP2->CSR |= (0 << 8);
 	// Set COMP2_INM input to PA5-
 	COMP2->CSR |= (0b110 << 4);
-
 	// Enable COMP2
 	COMP2->CSR |= COMP_CSR_EN;
 }
@@ -118,7 +105,6 @@ void COMP3_Init_v2(void){
 	COMP3->CSR |= (1 << 8);
 	// Set COMP3_INM input to PC0-
 	COMP3->CSR |= (0b111 << 4);
-
 	// Enable COMP3
 	COMP3->CSR |= COMP_CSR_EN;
 }
@@ -149,10 +135,6 @@ void COMP4_Init_v2(void){
 	COMP4->CSR &= ~COMP_CSR_INPSEL;
 	// Set COMP4_INM input to PB2-
 	COMP4->CSR |= (0b111 << 4);
-
-	// EXTI mode
-	//COMP1->CSR |= (0b0000 << 24);
-
 	// Enable COMP4
 	COMP4->CSR |= COMP_CSR_EN;
 }
@@ -167,13 +149,11 @@ void Enable_COMP1_Interrupt(void){
 	// Unmask EXTI line 21 (enable interrupt)
 	EXTI->IMR1 |= EXTI_IMR1_IM21;
 
-	// this is going to reset main switch case from 6 back to 1 (P1 is last phase in cycle)
-	phase1_counter++;
-	// phase 1 == case 1
+	// phase1 = 1, phase2 = 2
 	case_interrupt_counter = 1;
 
 	NVIC_EnableIRQ(COMP1_2_3_IRQn);
-	NVIC_SetPriority(COMP1_2_3_IRQn, 1); // Optional priority
+	NVIC_SetPriority(COMP1_2_3_IRQn, 1);
 }
 
 // Enables interrupt at COMP3 output -> P2
@@ -181,14 +161,14 @@ void Enable_COMP3_Interrupt(void){
 	// Rising edge trigger (Table 101. EXTI lines connections)
 	EXTI->RTSR1 |= EXTI_RTSR1_RT29;
 
-	// Unmask EXTI line 21 (enable interrupt)
+	// Unmask EXTI line 29 (enable interrupt)
 	EXTI->IMR1 |= EXTI_IMR1_IM29;
 
-	// phase 2 == case 2
+	// phase1 = 1, phase2 = 2
 	case_interrupt_counter = 2;
 
 	NVIC_EnableIRQ(COMP1_2_3_IRQn);
-	NVIC_SetPriority(COMP1_2_3_IRQn, 1); // Optional priority
+	NVIC_SetPriority(COMP1_2_3_IRQn, 1);
 }
 
 // Enables interrupt at COMP4 output -> P3
@@ -200,7 +180,7 @@ void Enable_COMP4_Interrupt(void){
 	EXTI->IMR1 |= EXTI_IMR1_IM30;
 
 	NVIC_EnableIRQ(COMP4_IRQn);
-	NVIC_SetPriority(COMP4_IRQn, 1); // Optional priority
+	NVIC_SetPriority(COMP4_IRQn, 1);
 }
 
 void Disable_All_COMP_Interrupts(void){
@@ -210,28 +190,25 @@ void Disable_All_COMP_Interrupts(void){
 
 // This is what's called when COMP1,2,3 interrupts are triggered
 void COMP1_2_3_IRQHandler(void){
-	//GPIOA->ODR |= LED_PA10;
-	//printf("hello \r\n");
-
 	switch(case_interrupt_counter){
 		// Phase 1
 		case 1:
-			//GPIOA->ODR |= LED_PA10;
 			// phase 1 -> COMP1 output
 			if (EXTI->PR1 & EXTI_PR1_PIF21) {
 				EXTI->PR1 |= EXTI_PR1_PIF21; // Clear flag
 
 				// Disable interrupts. Prevent double fire
 				Disable_All_COMP_Interrupts();
+				//printf("COMP_Phase_State: %u \r\n", COMP_Phase_State);
 
-				// Go to next switch case
-				if(phase1_counter == 2){
-					COMP_Phase_State = 1; // This allows switch case 6 to restart at 1 (loop)
-			        	                      // phase1 is the last phase step so we reset it to 1
-					phase1_counter = 0;   // reset counter
-				}
-				else {
+				// If case3, then continue
+				if(COMP_Phase_State == 3){
 					COMP_Phase_State++;
+				}
+				// If case6, then restart
+				else if(COMP_Phase_State == 6) {
+					// This sets switch case 6 in Closed_Loop() to restart at 1 (loop)
+					COMP_Phase_State = 1;
 			    }
 			}
 			break;
@@ -259,9 +236,6 @@ void COMP4_IRQHandler(void){
 
 		// Disable interrupts. Prevent double fire
 		Disable_All_COMP_Interrupts();
-
-		// Toggle LED_PA10
-		//GPIOA->ODR |= LED_PA10;
 
 		// Go to next state
 		COMP_Phase_State++;

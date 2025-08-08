@@ -18,7 +18,7 @@
 
 #define  COMP_FLOATING          0       // Sets PWM duty cycle to 0
 #define  COMP_PHASE_DELAY_uS    50      // default == 30, open_loop delay == 3000 uS
-#define  COMP_PHASE_DELAY_mS    200
+#define  COMP_PHASE_DELAY_mS    500
 
 volatile uint16_t COMP_Phase_State = 1;  // Since Open_Loop ends off at step 6, start at 6
 
@@ -43,10 +43,10 @@ void Closed_Loop(void){
 
 			printf("Case: %u \r\n", COMP_Phase_State);
 
-			//Delay_mS(COMP_PHASE_DELAY_mS);
+			Delay_mS(COMP_PHASE_DELAY_mS);
 
 			// Allow back-EMF to settle
-			Delay_uS(COMP_PHASE_DELAY_uS);
+			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P3 == Floating
 			// call interrupt to wait for COMP4_INP > COMP4_INM
@@ -67,13 +67,14 @@ void Closed_Loop(void){
 
 			printf("Case: %u \r\n", COMP_Phase_State);
 
-			//Delay_mS(COMP_PHASE_DELAY_mS);
+			Delay_mS(COMP_PHASE_DELAY_mS);
 
 			// Allow back-EMF to settle
-			Delay_uS(COMP_PHASE_DELAY_uS);
+			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P2 == Floating
 			// call interrupt to wait for COMP3_INP > COMP3_INM
+			//phase1_2_counter = 1;
 			Enable_COMP3_Interrupt();
 			break;
 
@@ -91,13 +92,14 @@ void Closed_Loop(void){
 
 			printf("Case: %u \r\n", COMP_Phase_State);
 
-			//Delay_mS(COMP_PHASE_DELAY_mS);
+			Delay_mS(COMP_PHASE_DELAY_mS);
 
 			// Allow back-EMF to settle
-			Delay_uS(COMP_PHASE_DELAY_uS);
+			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P1 == Floating
 			// call interrupt to wait for COMP1_INP > COMP1_INM
+			//phase1_2_counter = 2;
 			Enable_COMP1_Interrupt();
 			break;
 
@@ -115,10 +117,10 @@ void Closed_Loop(void){
 
 			printf("Case: %u \r\n", COMP_Phase_State);
 
-			//Delay_mS(COMP_PHASE_DELAY_mS);
+			Delay_mS(COMP_PHASE_DELAY_mS);
 
 			// Allow back-EMF to settle
-			Delay_uS(COMP_PHASE_DELAY_uS);
+			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P3 == Floating
 			// call interrupt to wait for COMP4_INP > COMP4_INM
@@ -139,13 +141,14 @@ void Closed_Loop(void){
 
 			printf("Case: %u \r\n", COMP_Phase_State);
 
-			//Delay_mS(COMP_PHASE_DELAY_mS);
+			Delay_mS(COMP_PHASE_DELAY_mS);
 
 			// Allow back-EMF to settle
-			Delay_uS(COMP_PHASE_DELAY_uS);
+			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P2 == Floating
 			// call interrupt to wait for COMP3_INP > COMP3_INM
+			//phase1_2_counter = 3;
 			Enable_COMP3_Interrupt();
 			break;
 
@@ -163,13 +166,14 @@ void Closed_Loop(void){
 
 			printf("Case: %u \r\n", COMP_Phase_State);
 
-			//Delay_mS(COMP_PHASE_DELAY_mS);
+			Delay_mS(COMP_PHASE_DELAY_mS);
 
 			// Allow back-EMF to settle
-			Delay_uS(COMP_PHASE_DELAY_uS);
+			//Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P1 == Floating
 			// call interrupt to wait for COMP1_INP > COMP1_INM
+			//phase1_2_counter = 4;
 			Enable_COMP1_Interrupt();
 			break;
 

@@ -13,6 +13,8 @@
 
 #include "stm32g431xx.h"
 
+extern volatile uint16_t phase1_2_counter;
+
 void COMP1_Init(void);     // PA1+ | PA4-
 //void COMP2_Init(void);   // PA3+ | PA2- <-USART2
 //void COMP3_Init(void);   // PA0+ | PF1-
@@ -26,6 +28,7 @@ void Enable_COMP1_Interrupt(void);
 void Enable_COMP3_Interrupt(void);
 void Enable_COMP4_Interrupt(void);
 void COMP1_2_3_IRQHandler(void);
+void COMP4_IRQHandler(void);
 
 void Disable_All_COMP_Interrupts(void);
 
