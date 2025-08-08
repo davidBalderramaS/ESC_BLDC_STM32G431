@@ -1,9 +1,11 @@
 /*
  * ESC - Single Motor Driver
- * Using the stm32G431 microcontroller, back emf detection
+ * Closed loop feedback system.
+ * Using the stm32G431 microcontroller, back emf detection, and ir2110
  *
  * Author: David Balderrama S.
  * Start Date: 7/27/2025
+ * End date: 8/8/2025
  *
  */
 
@@ -64,28 +66,5 @@ int main(void){
 }
 
 
-/*
- *  Somewhere along the lines, my COMPx stopped working.
- *  They no longer are tracking or measuring
- *
- *  Essentially, they are always tracking the value of bit "COMP_CSR_VALUE" to be 0
- *  even though I'm applying a controlled voltage so that COMP_INP > COMP_INM
- *                                                            3V   >   1V
- *
- */
-
-
-/*
- *
-	        if (COMP1->CSR & COMP_CSR_VALUE){
-	            GPIOA->ODR |= LED_PA10;
-	            printf("HIGH \r\n");
-	        }
-	        else {
-	            GPIOA->ODR &= ~LED_PA10;
-	            printf("LOW \r\n");
-	        }
- *
- */
 
 

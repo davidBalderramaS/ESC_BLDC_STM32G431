@@ -49,36 +49,6 @@ void COMP1_Init(void){
 	COMP1->CSR |= COMP_CSR_EN;
 }
 
-// COMP2_INP -> PA7+
-// COMP2_INM -> PA5-
-void COMP2_Init_v2(void){
-	// Enable GPIOA Clk
-	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
-	// Enable COMPx Clk access
-	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
-
-	// Set PA7+ to Analog Mode
-	GPIOA->MODER &= ~(0b11 << 14);
-	GPIOA->MODER |=  (0b11 << 14);
-	// Set PA5- to Analog Mode
-	GPIOA->MODER &= ~(0b11 << 10);
-	GPIOA->MODER |=  (0b11 << 10);
-
-	// Disable pull-up/pull-down
-	GPIOA->PUPDR &= ~(0b11 << 10);
-	GPIOA->PUPDR &= ~(0b11 << 14);
-
-	// Init COMP2
-	// Clear CSR
-	COMP2->CSR = 0;
-	// Set COMP2_INP input to PA7+
-	COMP2->CSR |= (0 << 8);
-	// Set COMP2_INM input to PA5-
-	COMP2->CSR |= (0b110 << 4);
-	// Enable COMP2
-	COMP2->CSR |= COMP_CSR_EN;
-}
-
 // COMP3_INP -> PC1+
 // COMP3_INM -> PC0-
 void COMP3_Init_v2(void){
@@ -239,6 +209,8 @@ void COMP4_IRQHandler(void){
 
 		// Go to next state
 		COMP_Phase_State++;
+
+		GPIOA->ODR ^= LED_PA10;
 	}
 }
 
@@ -271,6 +243,36 @@ void COMP2_Init(void){
 	// Set COMP2_INM input to PA2-
 	COMP2->CSR |= (0b111 << 4);
 
+	// Enable COMP2
+	COMP2->CSR |= COMP_CSR_EN;
+}
+
+// COMP2_INP -> PA7+
+// COMP2_INM -> PA5-
+void COMP2_Init_v2(void){
+	// Enable GPIOA Clk
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+	// Enable COMPx Clk access
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+
+	// Set PA7+ to Analog Mode
+	GPIOA->MODER &= ~(0b11 << 14);
+	GPIOA->MODER |=  (0b11 << 14);
+	// Set PA5- to Analog Mode
+	GPIOA->MODER &= ~(0b11 << 10);
+	GPIOA->MODER |=  (0b11 << 10);
+
+	// Disable pull-up/pull-down
+	GPIOA->PUPDR &= ~(0b11 << 10);
+	GPIOA->PUPDR &= ~(0b11 << 14);
+
+	// Init COMP2
+	// Clear CSR
+	COMP2->CSR = 0;
+	// Set COMP2_INP input to PA7+
+	COMP2->CSR |= (0 << 8);
+	// Set COMP2_INM input to PA5-
+	COMP2->CSR |= (0b110 << 4);
 	// Enable COMP2
 	COMP2->CSR |= COMP_CSR_EN;
 }
