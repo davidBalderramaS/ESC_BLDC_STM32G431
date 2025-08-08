@@ -32,26 +32,24 @@ int main(void){
 	Delay_TIM17_Init();       // Delay_mS()
 
 
-
 	COMP1_Init();             // PA1+ | PA4-  -> P1
 	COMP3_Init_v2();          // PC1+ | PC0-  -> P2
 	COMP4_Init_v2();          // PB0+ | PB2-  -> P3
 
 
-
 	PWM_PB6_TIM4_CH1_Init();  // M1H
 	PWM_PB3_TIM2_CH2_Init();  // M1L
-
 	PWM_PA15_TIM2_CH1_Init(); // M2H
 	PWM_PB7_TIM4_CH2_Init();  // M2L
-
 	PWM_PC2_TIM1_CH3_Init();  // M3H
 	PWM_PC3_TIM1_CH4_Init();  // M3L
 
+
 	// Ensure global interrupts are enabled
 	if (__get_PRIMASK() & 1){
-		__enable_irq(); // Enable global interrupts if disabled
+		__enable_irq();
 	}
+
 
 	while (1){
 		if (toggle_State == 0){
@@ -60,14 +58,6 @@ int main(void){
 		}
 		else if (toggle_State == 1){
 			// Uses feedback from back EMF to trigger commutational steps
-			//Closed_Loop();
-
-	        if (COMP4->CSR & COMP_CSR_VALUE){
-	            GPIOA->ODR &= LED_PA10;
-	        }
-	        else {
-	            GPIOA->ODR |= LED_PA10;
-	        }
 	        Closed_Loop();
 		}
 	}
@@ -85,6 +75,17 @@ int main(void){
  */
 
 
-
+/*
+ *
+	        if (COMP1->CSR & COMP_CSR_VALUE){
+	            GPIOA->ODR |= LED_PA10;
+	            printf("HIGH \r\n");
+	        }
+	        else {
+	            GPIOA->ODR &= ~LED_PA10;
+	            printf("LOW \r\n");
+	        }
+ *
+ */
 
 

@@ -193,83 +193,79 @@ void Enable_COMP3_Interrupt(void){
 
 // Enables interrupt at COMP4 output -> P3
 void Enable_COMP4_Interrupt(void){
-	//GPIOA->ODR |= LED_PA10;
-
 	// Rising edge trigger (Table 101. EXTI lines connections)
 	EXTI->RTSR1 |= EXTI_RTSR1_RT30;
 
 	// Unmask EXTI line 30 (enable interrupt)
 	EXTI->IMR1 |= EXTI_IMR1_IM30;
 
-	// phase 3 == case 4
-	case_interrupt_counter = 3;
-
-	NVIC_EnableIRQ(COMP1_2_3_IRQn);
-	NVIC_SetPriority(COMP1_2_3_IRQn, 1); // Optional priority
+	NVIC_EnableIRQ(COMP4_IRQn);
+	NVIC_SetPriority(COMP4_IRQn, 1); // Optional priority
 }
 
-void Disable_All_COMP_Interrupts(void) {
-    //EXTI->IMR1 &= ~EXTI_IMR1_IM21; // COMP1 -> P1
-    //EXTI->IMR1 &= ~EXTI_IMR1_IM29; // COMP3 -> P2
-   // EXTI->IMR1 &= ~EXTI_IMR1_IM30; // COMP4 -> P3
-
+void Disable_All_COMP_Interrupts(void){
 	NVIC_DisableIRQ(COMP1_2_3_IRQn);
+	NVIC_DisableIRQ(COMP4_IRQn);
 }
 
 // This is what's called when COMP1,2,3 interrupts are triggered
-void COMP1_2_3_IRQHandler(void) {
+void COMP1_2_3_IRQHandler(void){
 	//GPIOA->ODR |= LED_PA10;
-	printf("hello \r\n");
+	//printf("hello \r\n");
 
 	switch(case_interrupt_counter){
 		// Phase 1
 		case 1:
-				//GPIOA->ODR |= LED_PA10;
-				// phase 1 -> COMP1 output
-				if (EXTI->PR1 & EXTI_PR1_PIF21) {
-					EXTI->PR1 |= EXTI_PR1_PIF21; // Clear flag
+			//GPIOA->ODR |= LED_PA10;
+			// phase 1 -> COMP1 output
+			if (EXTI->PR1 & EXTI_PR1_PIF21) {
+				EXTI->PR1 |= EXTI_PR1_PIF21; // Clear flag
 
-					// Disable interrupts. Prevent double fire
-					Disable_All_COMP_Interrupts();
+				// Disable interrupts. Prevent double fire
+				Disable_All_COMP_Interrupts();
 
-					// Go to next switch case
-					if(phase1_counter == 2){
-						COMP_Phase_State = 1; // This allows switch case 6 to restart at 1 (loop)
+				// Go to next switch case
+				if(phase1_counter == 2){
+					COMP_Phase_State = 1; // This allows switch case 6 to restart at 1 (loop)
 			        	                      // phase1 is the last phase step so we reset it to 1
-						phase1_counter = 0;   // reset counter
-					}
-					else {
-						COMP_Phase_State++;
-			    	}
+					phase1_counter = 0;   // reset counter
 				}
-				break;
+				else {
+					COMP_Phase_State++;
+			    }
+			}
+			break;
 		// Phase 2
 		case 2:
-				// phase 2 -> COMP3 output
-				if (EXTI->PR1 & EXTI_PR1_PIF29) {
-					EXTI->PR1 |= EXTI_PR1_PIF29; // Clear pending flag (write 1 to clear)
+			// phase 2 -> COMP3 output
+			if (EXTI->PR1 & EXTI_PR1_PIF29) {
+				EXTI->PR1 |= EXTI_PR1_PIF29;
 
-					// Disable interrupts. Prevent double fire
-					Disable_All_COMP_Interrupts();
+				// Disable interrupts. Prevent double fire
+				Disable_All_COMP_Interrupts();
 
-					// Go to next state
-					COMP_Phase_State++;
-				}
-				break;
-		// Phase 3
-		case 3:
-				// phase 3 -> COMP4 output
-				if (EXTI->PR1 & EXTI_PR1_PIF30) {
-					EXTI->PR1 |= EXTI_PR1_PIF30; // Clear pending flag (write 1 to clear)
+				// Go to next state
+				COMP_Phase_State++;
+			}
+			break;
+	}
+}
 
-					// Disable interrupts. Prevent double fire
-					Disable_All_COMP_Interrupts();
+// This is what's called when COMP4 interrupt is triggered
+void COMP4_IRQHandler(void){
+	// phase 3 -> COMP4 output
+	if (EXTI->PR1 & EXTI_PR1_PIF30) {
+		EXTI->PR1 |= EXTI_PR1_PIF30; // Clear pending flag (write 1 to clear)
 
-					// Go to next state
-					COMP_Phase_State++;
-				}
-				break;
-		}
+		// Disable interrupts. Prevent double fire
+		Disable_All_COMP_Interrupts();
+
+		// Toggle LED_PA10
+		//GPIOA->ODR |= LED_PA10;
+
+		// Go to next state
+		COMP_Phase_State++;
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

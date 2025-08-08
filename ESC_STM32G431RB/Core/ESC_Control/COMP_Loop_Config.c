@@ -16,7 +16,7 @@
 #include "../Back_EMF/COMPx.h"
 #include "../Utils/Utils.h"
 
-#define  COMP_FLOATING          0         // Sets PWM duty cycle to 0
+#define  COMP_FLOATING          0       // Sets PWM duty cycle to 0
 #define  COMP_PHASE_DELAY_uS    50      // default == 30, open_loop delay == 3000 uS
 #define  COMP_PHASE_DELAY_mS    200
 
