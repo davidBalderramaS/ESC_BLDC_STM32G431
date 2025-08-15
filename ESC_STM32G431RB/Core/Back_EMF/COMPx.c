@@ -132,7 +132,7 @@ void Enable_COMP1_Interrupt(void){
 
 // Enables interrupt at COMP3 output -> P2
 void Enable_COMP3_Interrupt(void){
-	GPIOA->ODR |= LED_PA10;
+	//GPIOA->ODR |= LED_PA10;
 
 	// Rising edge trigger (Table 101. EXTI lines connections)
 	EXTI->RTSR1 |= EXTI_RTSR1_RT29;
