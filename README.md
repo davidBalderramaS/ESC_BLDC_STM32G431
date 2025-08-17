@@ -19,7 +19,8 @@ This project is a custom-built Electronic Speed Controller (ESC) for brushless D
 - **Board**: Custom 6-layer PCB  
   - Layer stackup: Signal / GND / 3.3V / 14.8V / GND / Signal  
 
-<img width="720" height="558" alt="image" src="https://github.com/user-attachments/assets/173acfa6-a909-4492-b6d5-c53c06740d65" />
+<img width="720" height="558" alt="image" src="https://github.com/user-attachments/assets/639f9eed-4c13-4b8c-a5ed-e8cb37e80ad8" />
+
 <img width="720" height="558" alt="image" src="https://github.com/user-attachments/assets/5eb03023-227d-4d3c-97fa-47defdb01d46" />
 
 
