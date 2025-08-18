@@ -16,13 +16,13 @@
 extern volatile uint16_t phase1_2_counter;
 
 void COMP1_Init(void);     // PA1+ | PA4-
-//void COMP2_Init(void);   // PA3+ | PA2- <-USART2
-//void COMP3_Init(void);   // PA0+ | PF1-
-
-//void COMP2_Init_v2(void); // PA7+ | PA5-
 void COMP3_Init_v2(void); // PC1+ | PC0-
 void COMP4_Init_v2(void); // PB0+ | PB2-
 
+// These function will be used for the next/final project (4-in-1 ESC)
+//void COMP2_Init(void);    // PA3+ | PA2- <-USART2
+//void COMP3_Init(void);    // PA0+ | PF1-
+//void COMP2_Init_v2(void); // PA7+ | PA5-
 
 void Enable_COMP1_Interrupt(void);
 void Enable_COMP3_Interrupt(void);

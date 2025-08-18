@@ -1,5 +1,5 @@
 /*
- * Random Functions for testing stuff
+ * Random/Misc functions for testing stuff
  */
 
 #include "Utils.h"
@@ -11,7 +11,7 @@
 // Turn on LED on breadboard
 void LED_PA10_Init(void){
 	// init Clk to GPIOA
-	RCC->AHB2ENR |= (1<<0);
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
 
 	// Clear PA10
 	GPIOA->MODER &= ~(0b11 << 20);

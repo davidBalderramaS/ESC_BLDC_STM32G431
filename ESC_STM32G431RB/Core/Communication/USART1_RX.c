@@ -1,8 +1,8 @@
 /*
- * USART1_RX.c
+ * This files is for the Configuration USART for serial communication (Receiving)
  *
- *  Created on: Aug 3, 2025
- *      Author: David
+ * Sets PA10 to AF7 for USART1_TX
+ *
  */
 
 #include "USART1_RX.h"
@@ -41,6 +41,6 @@ int __io_getchar(void) {
 }
 
 
-
-
+// To enable, call:
+// scanf("%hu ", &userInput);
 

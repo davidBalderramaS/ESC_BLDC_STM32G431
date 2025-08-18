@@ -1,6 +1,6 @@
 /*
- * This file is for the initialization of internal comparators
- * for the back EMF detection circuitry
+ * This file is for the initialization of the stm32G431 internal comparators.
+ * They'll be use for the feedback circuitry (back EMF detection).
  *
  * Goal: When COMPx_INP > COMPx_INM,
  *       then switch to the next commutational step in motor sequence.
@@ -40,8 +40,6 @@ void COMP1_Init(void){
 	// Init COMP1
 	// Clear CSR
 	COMP1->CSR = 0;
-	// Non-inverted polarity
-	//COMP1->CSR &= ~COMP_CSR_POLARITY;
 	// Set COMP1_INP input to PA1
 	COMP1->CSR &= ~(1 << 8);
 	// Set COMP1_INM input to PA4
@@ -167,7 +165,7 @@ void Disable_All_COMP_Interrupts(void){
 	NVIC_DisableIRQ(COMP4_IRQn);
 }
 
-// This is what's called when COMP1,2,3 interrupts are triggered
+// This is what's called when COMP1,2,3 (Phase 1 & 2) interrupts are triggered
 void COMP1_2_3_IRQHandler(void){
 	// Phase 2: COMP3
 	if (EXTI->PR1 & EXTI_PR1_PIF29){
@@ -213,7 +211,7 @@ void COMP1_2_3_IRQHandler(void){
 	}
 }
 
-// This is what's called when COMP4 interrupt is triggered
+// This is what's called when COMP4 (Phase 3) interrupt is triggered
 void COMP4_IRQHandler(void){
 	// Phase 3
 	if (EXTI->PR1 & EXTI_PR1_PIF30) {
@@ -234,31 +232,10 @@ void COMP4_IRQHandler(void){
 	}
 }
 
-
-/*
- * // This is what's called when COMP4 interrupt is triggered
-void COMP4_IRQHandler(void){
-	// phase 3 -> COMP4 output
-	if (EXTI->PR1 & EXTI_PR1_PIF30) {
-		EXTI->PR1 |= EXTI_PR1_PIF30; // Clear pending flag (write 1 to clear)
-
-		// Disable interrupts. Prevent double fire
-		Disable_All_COMP_Interrupts();
-
-		// Go to next state
-		if (COMP_Phase_State == 1){
-			COMP_Phase_State = 2;
-		}
-		else if (COMP_Phase_State == 4){
-			COMP_Phase_State = 5;
-		}
-	}
-}
- *
- */
-
 /////////////////////////////////////////////////////////////////////////////
 // SOLDER BRIDGE  -> MODIFY TO USE on nucleo board :(
+// These function will be used for the next/final project (4-in-1 ESC)
+
 // COMP2_INP -> PA3+
 // COMP2_INM -> PA2-
 void COMP2_Init(void){

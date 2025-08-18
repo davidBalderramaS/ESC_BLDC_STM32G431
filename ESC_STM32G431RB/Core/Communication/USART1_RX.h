@@ -1,8 +1,8 @@
 /*
- * USART1_RX.h
+ * This files is for the Configuration USART for serial communication (Receiving)
  *
- *  Created on: Aug 3, 2025
- *      Author: David
+ * Sets PA10 to AF7 for USART1_TX
+ *
  */
 
 #ifndef COMMUNICATION_USART1_RX_H_
@@ -16,5 +16,4 @@ int __io_getchar(void);
 
 #endif /* COMMUNICATION_USART1_RX_H_ */
 
-// Cant use USART1 of nucleo, of course right?
-// scanf("%hu ", &userInput);
+
