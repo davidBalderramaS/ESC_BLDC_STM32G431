@@ -1,7 +1,8 @@
 /*
- * OpenLoop_Config.c
+ * This files control the open-loop system that drives the motor
  *
- * Drives MOSFETs in open loop config
+ * This simply calls the particular step in the pattern and sets a constant delay (PHASE_DELAY_US).
+ * This is only used at the beginning at the start-up to make the motor spin
  *
  */
 
@@ -16,7 +17,6 @@
 
 
 #define FLOATING          0         // Sets PWM duty cycle to 0
-//#define OPEN_LOOP_DELAY  50         // How many cycles before breaking Open_Loop();
 
 volatile uint16_t Phase_State = 1;  // Commutational step pattern
 volatile uint16_t toggle_State = 0; // toggles Open_Loop() -> COMP_Loop()
@@ -24,8 +24,6 @@ uint32_t counter = 0;
 
 
 void Open_Loop(void){
-
-	//printf("State: %u   ", toggle_State);
 
 	switch(Phase_State){
 		case 1:
@@ -40,10 +38,7 @@ void Open_Loop(void){
 			Set_DutyCycle_PC2_TIM1_CH3(FLOATING);  // M3H
 			Set_DutyCycle_PC3_TIM1_CH4(FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
 			Delay_uS(PHASE_DELAY_US);
 			Phase_State++;
 			break;
@@ -60,10 +55,7 @@ void Open_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(FLOATING);  // M3H
 
-			//printf("Case: %u \r\n", Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
 			Delay_uS(PHASE_DELAY_US);
 			Phase_State++;
 			break;
@@ -80,10 +72,7 @@ void Open_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(FLOATING);  // M3H
 
-			//printf("Case: %u \r\n", Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
 			Delay_uS(PHASE_DELAY_US);
 			Phase_State++;
 			break;
@@ -100,10 +89,7 @@ void Open_Loop(void){
 			Set_DutyCycle_PC2_TIM1_CH3(FLOATING);  // M3H
 			Set_DutyCycle_PC3_TIM1_CH4(FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
 			Delay_uS(PHASE_DELAY_US);
 			Phase_State++;
 			break;
@@ -120,10 +106,7 @@ void Open_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(FLOATING);  // M2L
 			Set_DutyCycle_PC3_TIM1_CH4(FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
 			Delay_uS(PHASE_DELAY_US);
 			Phase_State++;
 			break;
@@ -140,16 +123,12 @@ void Open_Loop(void){
 			Set_DutyCycle_PA15_TIM2_CH1(FLOATING); // M2H
 			Set_DutyCycle_PC3_TIM1_CH4(FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", Phase_State);
-			//printf("ADC: %u \r\n\n", ADC_Truncate(ADC_Value_PA7));
 
-			//Delay_mS(PHASE_DELAY_MS);
 			Delay_uS(PHASE_DELAY_US);
 			Phase_State = 1;
 
 			// Switches to COMP_Loop() after "OPEN_LOOP_DELAY" number of cycles
 			counter++;
-			//printf("CNT: %lu  \r\n", counter);
 			if(counter == OPEN_LOOP_DELAY){
 				toggle_State = 1;
 			}

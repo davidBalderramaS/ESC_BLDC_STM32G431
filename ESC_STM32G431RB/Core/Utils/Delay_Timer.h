@@ -1,8 +1,7 @@
 /*
- * Delay_Timer.h
  *
- *  Created on: Aug 1, 2025
- *      Author: David
+ * This function uses TIM3 for an accurate delay function
+ *
  */
 
 #ifndef UTILS_DELAY_TIMER_H_

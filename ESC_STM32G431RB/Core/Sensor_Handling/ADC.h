@@ -1,8 +1,14 @@
 /*
- * ADC.h
+ *  ADC.c
  *
- *  Created on: Jul 28, 2025
- *      Author: David
+ *  This source file is for the configuration
+ *  of the ADC for PA7
+ *
+ *  It uses GPIO, timer, and interrupt peripherals
+ *
+ *  This is for the potentiometer input pin that reads user input
+ *  and modifies output PWM signal (duty cycle) into mosfet drivers
+ *
  */
 
 #ifndef SENSOR_HANDLING_ADC_H_

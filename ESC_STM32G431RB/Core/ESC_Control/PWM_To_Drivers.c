@@ -1,42 +1,16 @@
 /*
  * PWM_To_Drivers.c
  *
- *  Created on: Jul 31, 2025
- *      Author: David
+ * This files is for the configuration of the 6 PWM waveforms that are used to toggle the Mosfets ON/OFF
+ * (through the mosfet drivers)
+ *
  */
 
 #include "PWM_To_Drivers.h"
 
-//#include "Sensor_Handling/ADC.h"
 #include "stm32g431xx.h"
 #include "../Sensor_Handling/ADC.h"
 #include "../Communication/USART_printf.h"
-
-/*  Pin Assignment
- *  Utils:
- *  PA7  -> TIM3_CH2    -> ADC for poteniometer
- *  PA10 -> GPIOA       -> Regular output signal for LED
- *  PA2  -> USART2      -> Printf()
- *	PA11 -> USB
- *	PA12 -> USB
- *
- *  PWMs:
- *  PB7  -> TIM4_CH2  -> M1H ✅
- *  PB6  -> TIM4_CH1  -> M1L ✅
- *  PB3  -> TIM2_CH2  -> M2H ✅
- *  PA15 -> TIM2_CH1  -> M2L ✅
- *  PA14 -> TIM8_CH2  -> M3H ✅
- *  PA13 -> TIM4_CH3  -> M3L ✅
- *
- *	COMPs:
- *	PA1+ -> COMP1_INP -> PB
- *	PA4- -> COMP1_INM -> VN
- *	PB0+ -> COMP4_INP -> PA    <- TEMP use only
- *	PB2- -> COMP4_INM -> VN    <- TEMP use only
- *	PC1+ -> COMP3_INP -> PC    <- TEMP use only
- *	PC0- -> COMP3_INM -> VN    <- TEMP use only
- *
- */
 
 volatile uint16_t temp = 0;
 
@@ -295,58 +269,38 @@ void PWM_PC3_TIM1_CH4_Init(void){
 
 // M1H
 void Set_DutyCycle_PB6_TIM4_CH1(uint16_t ADC_Poten_Trunc_Value){
-	// TEST 2
-	//temp = ADC_Poten_Trunc_Value;
-	//TIM4->CCR1 = ADC_Truncate(temp);
-	//printf("%u \r\n", temp);
-
-	// TEST 3: Passing truncated value BEFORE assigning to CCRx
 	TIM4->CCR1 = ADC_Poten_Trunc_Value;
-	//printf("%u \r\n", ADC_Poten_Trunc_Value);
-
-
-
-
-	//TIM4->CCR1 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 // M1L
 void Set_DutyCycle_PB3_TIM2_CH2(uint16_t ADC_Poten_Trunc_Value){
 	TIM2->CCR2 = ADC_Poten_Trunc_Value;
-
-	//TIM2->CCR2 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 // M2H
 void Set_DutyCycle_PA15_TIM2_CH1(uint16_t ADC_Poten_Trunc_Value){
 	TIM2->CCR1 = ADC_Poten_Trunc_Value;
-
-	//TIM2->CCR1 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 // M2L
 void Set_DutyCycle_PB7_TIM4_CH2(uint16_t ADC_Poten_Trunc_Value){
 	TIM4->CCR2 = ADC_Poten_Trunc_Value;
-
-	//TIM4->CCR2 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 // M3H
 void Set_DutyCycle_PC2_TIM1_CH3(uint16_t ADC_Poten_Trunc_Value){
 	TIM1->CCR3 = ADC_Poten_Trunc_Value;
-
-	//TIM1->CCR3 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 // M3L
 void Set_DutyCycle_PC3_TIM1_CH4(uint16_t ADC_Poten_Trunc_Value){
 	TIM1->CCR4 = ADC_Poten_Trunc_Value;
-
-	//TIM1->CCR4 = ADC_Truncate(ADC_Poten_Trunc_Value);
 }
 
 /////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////
+// Will use these function in next/final project (4-in-1 ESC)
+
+/*
 
 // PWM for PA14 (TIM8_CH2 -> AF5)
 void PWM_PA14_TIM8_CH2_Init(void){
@@ -432,7 +386,7 @@ void PWM_PA13_TIM4_CH3_Init(void){
 	TIM4->CR1 |= TIM_CR1_CEN;        // Enable counter on TIM4
 }
 
-
+*/
 
 
 

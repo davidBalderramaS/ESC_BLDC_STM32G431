@@ -1,7 +1,7 @@
 /*
- * ADC.c
+ *  ADC.c
  *
- *  This source file hold all of the code for the init and function
+ *  This source file is for the configuration
  *  of the ADC for PA7
  *
  *  It uses GPIO, timer, and interrupt peripherals
@@ -96,7 +96,7 @@ void ADC1_2_IRQHandler(void) {
 }
 
 /*
- *  This function adjusts values of the ADC input (potentiometer value)
+ *  This function adjusts/truncates values of the ADC input (potentiometer value)
  *  in order to fit the PWM duty cycle range
  *  ADC = 0-4095
  *  PWM duty cycle = CCRx = 0-159 <-- For a 100k Hz PWM signal

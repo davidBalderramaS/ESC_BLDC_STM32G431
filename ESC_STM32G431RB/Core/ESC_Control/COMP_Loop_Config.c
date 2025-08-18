@@ -1,8 +1,17 @@
 /*
- * COMP_Loop_Config.c
+ * This files control the closed-loop feedback system that drives the motor
  *
- *  Created on: Aug 3, 2025
- *      Author: David
+ * This sets the particular COMP to trigger and activate depending on the cycle step
+ *
+ * To simplify, it does the following:
+ *
+ *			PhaseX    > Virtual_Neutral
+ * 		if (COMPx_INP > COMPx_INM){
+ * 			go to next step
+ * 		}
+ *
+ * 	It does so by using interrupts NOT by reading COMP_CRS_VALUE register
+ *
  */
 
 #include "COMP_Loop_Config.h"
@@ -17,8 +26,7 @@
 #include "../Utils/Utils.h"
 
 #define  COMP_FLOATING          0       // Sets PWM duty cycle to 0
-#define  COMP_PHASE_DELAY_uS    1400    // default == 30, open_loop delay == 3000 uS -> 1550, 1200(burns)
-#define  COMP_PHASE_DELAY_mS    500
+#define  COMP_PHASE_DELAY_uS    1400    // open_loop delay == 3000 uS -> @1200 uS (burns)
 
 volatile uint16_t COMP_Phase_State = 1;  // Since Open_Loop ends off at step 6, start at 6
 
@@ -41,10 +49,6 @@ void Closed_Loop(void){
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", COMP_Phase_State);
-
-			//Delay_mS(COMP_PHASE_DELAY_mS);
-
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
 
@@ -65,16 +69,11 @@ void Closed_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(COMP_FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 
-			//printf("Case: %u \r\n", COMP_Phase_State);
-
-			//Delay_mS(COMP_PHASE_DELAY_mS);
-
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P2 == Floating
 			// call interrupt to wait for COMP3_INP > COMP3_INM
-			//phase1_2_counter = 1;
 			Enable_COMP3_Interrupt();
 			break;
 
@@ -90,16 +89,11 @@ void Closed_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(COMP_FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 
-			//printf("Case: %u \r\n", COMP_Phase_State);
-
-			//Delay_mS(COMP_PHASE_DELAY_mS);
-
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
 
 			// P1 == Floating
 			// call interrupt to wait for COMP1_INP > COMP1_INM
-			//phase1_2_counter = 2;
 			Enable_COMP1_Interrupt();
 			break;
 
@@ -114,10 +108,6 @@ void Closed_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(COMP_FLOATING);  // M2L
 			Set_DutyCycle_PC2_TIM1_CH3(COMP_FLOATING);  // M3H
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
-
-			//printf("Case: %u \r\n", COMP_Phase_State);
-
-			//Delay_mS(COMP_PHASE_DELAY_mS);
 
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
@@ -139,10 +129,6 @@ void Closed_Loop(void){
 			Set_DutyCycle_PB7_TIM4_CH2(COMP_FLOATING);  // M2L
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
 
-			//printf("Case: %u \r\n", COMP_Phase_State);
-
-			//Delay_mS(COMP_PHASE_DELAY_mS);
-
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);
 
@@ -163,10 +149,6 @@ void Closed_Loop(void){
 			Set_DutyCycle_PB3_TIM2_CH2(COMP_FLOATING);  // M1L
 			Set_DutyCycle_PA15_TIM2_CH1(COMP_FLOATING); // M2H
 			Set_DutyCycle_PC3_TIM1_CH4(COMP_FLOATING);  // M3L
-
-			//printf("Case: %u \r\n", COMP_Phase_State);
-
-			//Delay_mS(COMP_PHASE_DELAY_mS);
 
 			// Allow back-EMF to settle
 			Delay_uS(COMP_PHASE_DELAY_uS);

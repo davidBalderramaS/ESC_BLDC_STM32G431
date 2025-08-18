@@ -1,5 +1,4 @@
 /*
- * Delay_Timer.c
  *
  * This function uses TIM3 for an accurate delay function
  *
